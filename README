@@ -1,0 +1,7 @@
+
+* Rules
+
+* Setup
+** Autodetect OS, have different functions for each, if there is some specific.
+** Choose how much 3rd party stuff to add.. Example commands that uses wireshark and such
+** Choose how much we are going to "hack" into the main system. Example aliasing the original "cd" and such
