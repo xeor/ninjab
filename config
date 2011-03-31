@@ -1,0 +1,27 @@
+#!/bin/bash
+
+# Comment out if you dont want the option to be loaded..
+
+# OS specific configs
+case $os in
+     "Linux")
+        true # none yet
+        ;;
+     "Darwin")
+        true # none yet
+        ;;
+esac
+
+##
+# Misc settings
+##
+#load_global_bashrc=1		# Try to load /etc/bashrc
+load_global_bash_completion=1	# Try to load /etc/bash_completion
+
+##
+# Parts
+##
+load_part_bash=1
+load_part_oneliners=1
+load_part_aliases=1
+load_part_prompt=1

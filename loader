@@ -1,0 +1,30 @@
+#!/bin/bash
+
+# Exit if running non-interacive
+[ -z "$PS1" ] && return
+
+mydir=$(cd $(dirname $BASH_SOURCE);pwd)
+os=$(uname -s)
+bash_version=${BASH_VERSION%.*}
+
+. $mydir/config
+
+if [ ! -z $load_global_bashrc ]; then
+    if [ -f /etc/bashrc ]; then
+        echo "Loading etc bashrc"
+        . /etc/bashrc
+    fi
+fi
+
+if [ ! -z $load_global_bash_completion ]; then
+    if [ -f /etc/bash_completion ]; then
+        . /etc/bash_completion
+    fi
+fi
+
+for i in $mydir/parts/*; do
+    # Load every file as long as they dont have a # ~ in the filename 
+    if ! [[ $i =~ \#|~ ]]; then
+        . $i
+    fi
+done
