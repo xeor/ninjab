@@ -15,13 +15,29 @@ esac
 ##
 # Misc settings
 ##
+editor='nano' # Your favorite editor, will be set in loader if set
+
 #load_global_bashrc=1		# Try to load /etc/bashrc
 load_global_bash_completion=1	# Try to load /etc/bash_completion
 
-##
+#---------------------------------------------------------------------
 # Parts
-##
+#
+# Sub_options of parts wont get loaded if you comment out the part itself..
+#---------------------------------------------------------------------
+
+# Bash tweeks
 load_part_bash=1
-load_part_oneliners=1
+load_part_bash_completions=1
+load_part_bash_history=1 # Timestamp in history, ignore common typed commands (like ls, fg, bg, ps aux), ignore dupes, max 2000 entries
+load_part_bash_colormanpages=1
+
+#load_part_oneliners=1
+
+# Shortcuts to a more effective usage of different commands
 load_part_aliases=1
+load_part_aliases_oneletters=1 # Load a couple of one-letters aliases
+load_part_aliases_ls=1 # More out of the default 'ls'
+
+# A more usefull bash prompt
 load_part_prompt=1

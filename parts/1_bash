@@ -1,0 +1,139 @@
+[ -z $load_part_bash ] && return
+
+# Not really sure if everything here needs v3.x and above. little FIXME
+if [ "$bash_version" \< "3.0" ]; then
+    return
+fi
+
+#ulimit -S -c 0          # Don't want any coredumps.
+set nobeep              # Who really likes this beeping?
+set complete=enhance    # Smarter autocomplete while tabbing. Autocomplete parts of filenames, eg, a.t<tab> autocomplete anonymous.txt
+set symlinks=chase      # Autoexpand symlinks
+set -o notify           # Notify of job termination immediately.
+set -o noclobber        # If set, disallow existing regular files to be overwritten by redirection of output.
+#set -o ignoreeof       # The shell will not exit upon reading EOF
+#set -o xtrace          # Print commands and their arguments as they are executed. Debug..
+
+# Enable options:
+shopt -s cdspell        # Try to correct small typos in `cd directory`
+shopt -s cdable_vars    # cd to a variable if it cant find a directory in $1 and the var exist.. etc='/etc', cd etc. See cd var section above
+shopt -s checkhash      # Let bash check the hash table for the command before executing, if not found try the PATH
+shopt -s checkwinsize   # Check and update LINES and COLUMNS after each command
+shopt -s sourcepath
+shopt -s no_empty_cmd_completion
+shopt -s cmdhist        # Try to save multiline commands as one in history
+shopt -s histappend histreedit histverify
+shopt -s extglob        # Necessary for programmable completion.
+
+[ "$bash_version" \> "4.0" ] && shopt -s autocd # Automatic cd into directory, FIXME (think this was introduced in 4.x and above
+
+# Disable options:
+shopt -u mailwarn
+unset MAILCHECK         # Don't want the shell to warn me of incoming mail.
+
+##
+# bash completion
+##
+if [ ! -z $load_part_bash_completions ]; then
+    complete -A hostname   rsh rcp telnet rlogin r ftp ping disk ssh
+    complete -A export     printenv
+    complete -A variable   export local readonly unset
+    complete -A enabled    builtin
+    complete -A alias      alias unalias
+    complete -A function   function
+    complete -A user       su mail finger
+    
+    complete -A helptopic  help     # Currently, same as builtins.
+    complete -A shopt      shopt
+    complete -A stopped -P '%' bg
+    complete -A job -P '%'     fg jobs disown
+    
+    complete -A directory  mkdir rmdir
+    complete -A directory   -o default cd
+    
+    # Compression
+    complete -f -o default -X '*.+(zip|ZIP)'  zip
+    complete -f -o default -X '!*.+(zip|ZIP)' unzip
+    complete -f -o default -X '*.+(z|Z)'      compress
+    complete -f -o default -X '!*.+(z|Z)'     uncompress
+    complete -f -o default -X '*.+(gz|GZ)'    gzip
+    complete -f -o default -X '!*.+(gz|GZ)'   gunzip
+    complete -f -o default -X '*.+(bz2|BZ2)'  bzip2
+    complete -f -o default -X '!*.+(bz2|BZ2)' bunzip2
+    complete -f -o default -X '!*.+(zip|ZIP|z|Z|gz|GZ|bz2|BZ2)' extract
+
+    # Documents - Postscript,pdf,dvi.....
+    complete -f -o default -X '!*.+(ps|PS)'  gs ghostview ps2pdf ps2ascii
+    complete -f -o default -X '!*.+(dvi|DVI)' dvips dvipdf xdvi dviselect dvitype
+    complete -f -o default -X '!*.+(pdf|PDF)' acroread pdf2ps
+    complete -f -o default -X '!*.@(@(?(e)ps|?(E)PS|pdf|PDF)?(.gz|.GZ|.bz2|.BZ2|.Z))' gv ggv
+    complete -f -o default -X '!*.texi*' makeinfo texi2dvi texi2html texi2pdf
+    complete -f -o default -X '!*.tex' tex latex slitex
+    complete -f -o default -X '!*.lyx' lyx
+    complete -f -o default -X '!*.+(htm*|HTM*)' lynx html2ps firefox
+    complete -f -o default -X '!*.+(doc|DOC|xls|XLS|ppt|PPT|sx?|SX?|csv|CSV|od?|OD?|ott|OTT)' openoffice.org
+    
+    # Multimedia
+    complete -f -o default -X '!*.+(gif|GIF|jp*g|JP*G|bmp|BMP|xpm|XPM|png|PNG)' xv gimp ee gqview
+    complete -f -o default -X '!*.+(mp3|MP3)' mpg123 mpg321
+    complete -f -o default -X '!*.+(ogg|OGG)' ogg123
+    complete -f -o default -X '!*.@(mp[23]|MP[23]|ogg|OGG|wav|WAV|pls|m3u|xm|mod|s[3t]m|it|mtm|ult|flac)' xmms
+    complete -f -o default -X '!*.@(mp?(e)g|MP?(E)G|wma|avi|AVI|asf|vob|VOB|bin|dat|vcd|ps|pes|fli|viv|rm|ram|yuv|mov|MOV|qt|QT|wmv|mp3|MP3|ogg|OGG|ogm|OGM|mp4|MP4|wav|WAV|asx|ASX)' vlc
+    
+    # Misc
+    complete -f -o default -X '!*.+(py|PY|pyc|PYC)' python
+    complete -f -o default -X '!*.+(php|PHP|php5|PHP5)' php
+fi
+
+COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
+
+export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
+export HOSTFILE=$HOME/.hosts    # Put list of remote hosts in ~/.hosts ...
+
+# FIXME, unsure if any other OS should handle this the same way. LSCOLORS should not be overwritten if set..?
+case ${os} in
+    Darwin)
+	export CLICOLOR=1
+	export LSCOLORS="ExGxFxdxCxDxDxhbadExEx"
+	;;
+esac
+
+if [ ! -z $load_part_bash_history ]; then
+    export HISTTIMEFORMAT="%F %T > "
+    export HISTIGNORE="&:[ ]*:bg:fg:ll:ls:ls -l:h:history:ps aux"
+    export HISTCONTROL=ignoredups
+    export HISTFILESIZE=2000 # Maybe to much..?
+fi
+
+# Colored man pages
+if [ ! -z $load_part_bash_colormanpages ]; then
+    case ${os} in
+	Linux)
+            export LESS_TERMCAP_mb=$'\E[01;31m' # begin blinking
+	    export LESS_TERMCAP_md=$'\E[01;38;5;74m' # begin bold
+	    export LESS_TERMCAP_me=$'\E[0m' # end mode
+	    export LESS_TERMCAP_se=$'\E[0m' # end standout-mode
+	    export LESS_TERMCAP_so=$'\E[38;5;246m' # begin standout-mode - info box
+	    export LESS_TERMCAP_ue=$'\E[0m' # end underline
+	    export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
+	    ;;
+	Darwin)
+	    export LESS_TERMCAP_mb=$'\E[01;31m' # begin blinking
+	    export LESS_TERMCAP_md=$'\E[01;31m' # begin bold
+	    export LESS_TERMCAP_me=$'\E[0m' # end mode
+	    export LESS_TERMCAP_se=$'\E[0m' # end standout-mode
+	    export LESS_TERMCAP_so=$'\E[01;44m' # begin standout-mode - info box
+	    export LESS_TERMCAP_ue=$'\E[0m' # end underline
+	    export LESS_TERMCAP_us=$'\E[32m' # begin underline
+	    ;;
+    esac
+fi
+
+# Less stuff
+if which svn &> /dev/null ; then
+    alias more='less'
+    export PAGER=less
+    export LESSCHARSET='utf-8'
+    export LESSOPEN='|/usr/bin/lesspipe %s 2>&-'
+    export LESS='-i -w -M -X -F -R -P%t?f%f :stdin .?pb%pb\%:?lbLine %lb:?bbByte %bb:-...'
+fi

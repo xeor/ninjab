@@ -1,0 +1,19 @@
+[ -z $load_part_oneliners ] && return
+
+# Usefull oneliners. If you have big functions (4+ lines), but them in a seperate file 100_ and up
+# Credit and explain (if not obious) all snipets!
+
+mkcd() { mkdir -p $@; cd $_; }
+
+# Make a folder with the date as prefix: mkdate suffix # (makes 100421_suffix), if no suffix, _temp is set
+mkdate() { mkdir $(date +%y%m%d)"_${1:-temp}"; }
+
+# History wrapper: h; h oldcommand
+h() { if [ -z "$1" ]; then history; else history | grep -i -- "$@"; fi; }
+
+# Strip away color output, before prosessing. Used in a pipe chain
+rem-colors() { sed "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"; }
+
+# Detects if you are trying to cd into a file. If you do, it gets you to the mother folder instead
+# http://www.commandlinefu.com/commands/view/5452
+# cd() { if [ -z "$1" ]; then command cd; else if [ -f "$1" ]; then command cd $(dirname "$1"); else command cd "$1"; fi; fi; }

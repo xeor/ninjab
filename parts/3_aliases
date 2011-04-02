@@ -1,0 +1,87 @@
+[ -z $load_part_aliases ] && return
+
+#---------------------------------------------------------------------
+# Aliases
+#
+# Be carefull with overwriting commands in eg OSX. It doesnt
+# take care of eg options that is repeated.
+# Alias for 'tail -n 30' works fine in Linux when adding another
+# -n, so it is 'tail -n 30 -n 1', but not in OSX (and proably others)
+#---------------------------------------------------------------------
+
+# ch... Turn on a little verbosety
+case ${OS} in
+     Darwin)
+         alias chmod='chmod -vv'
+         alias chown='chown -vv'
+         ;;
+
+     Linux)
+         alias chmod='chmod -c'
+         alias chown='chown -c'
+
+         # Makes them fill the screen by default (FIXME, not sure if this works in BSD)
+         alias head='head -n $(($LINES-2))'
+         alias tail='tail -n $(($LINES-2))'
+         ;;
+esac
+
+# Prevents accidentally clobbering files, and be verbose.
+alias rm='rm -v -i'
+alias cp='cp -v -i'
+alias mv='mv -v -i'
+
+# lazy cd ..
+alias .='pwd'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias ......='cd ../../../../..'
+
+alias psa='ps aux'
+alias cpr='cp -prv' # Keep rights, recursive, verbose
+alias mkdir='mkdir -p'
+alias env='env | sort'
+alias which='type -a'
+alias path='echo -e ${PATH//:/\\n}'
+alias cd-source='cd `pwd -P`' # Goto the "real" path of the directory you are in, follow symlinks
+
+# One letters
+if [ ! -z $load_part_aliases_oneletters ]; then
+    alias j='jobs -l'
+    alias c='clear' # Quick clear
+    alias l='ll'
+    alias p='psa'
+    alias n='nano'
+fi
+
+alias exit-silent='disown -a && exit'
+alias proc-pause='killall -STOP '
+alias proc-unpause='killall -CONT '
+
+if [ ! -z $load_part_aliases_lw ]; then
+    case ${os} in
+	Darwin)
+	    alias ls='ls -hF'
+	    alias ll='ls -lO' # View osx attributes too
+	    ;;
+	Linux)
+	    alias ls='ls -hF --color'  # add colors for filetype recognition
+	    alias ll='ls -l --group-directories-first'
+	    alias lx='ls -lXB'         # sort by extension
+	    ;;
+    esac
+
+    alias la='ls -Al'          # show hidden files
+    alias lk='ls -lSr'         # sort by size, biggest last
+    alias lc='ls -ltcr'        # sort by and show change time, most recent last
+    alias lu='ls -ltur'        # sort by and show access time, most recent last
+    alias lt='ls -ltr'         # sort by date, most recent last
+    alias lm='ls -Al | less'   # pipe through 'less' (more)
+    alias lr='ls -lR'          # recursive ls
+
+    if which tree &> /dev/null; then
+	alias tree='tree -Csu'     # nice alternative to 'recursive ls'
+    fi
+fi
