@@ -19,7 +19,7 @@
 #  - Added support for python virtualenv
 #  - Checks if screen exists before polling it. So no unknown command msg is shown
 #  - Fixed a bug that made a "ghost character" at the beginning of the line if error code != 0
-#    and the line was longer than >20 characters or so.. Weird bash issue.
+#    and the line was longer than >20 characters or so.. Weird bash issue..
 #  - Fixed wc -l output differ in bsd systems. Trim away everything not 0-9.
 #
 # Todo
