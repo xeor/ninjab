@@ -11,7 +11,11 @@ Features
 * Colorizing the output where possible.
 * Usefull "smart" bash prompt
 * Aliases which tries to save you time and give you more info as default.
-* Lot more, take a look inside the files in parts/
+* Different parts
+  * [1_bash](https://github.com/xeor/bashrc/wiki/parts-1_bash)
+  * [3_aliases](https://github.com/xeor/bashrc/wiki/parts-3_aliases)
+  * [4_prompt](https://github.com/xeor/bashrc/wiki/parts-4_prompt)
+* Lots more, take a look inside the files in parts/
 
 
 Installation
