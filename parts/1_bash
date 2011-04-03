@@ -6,15 +6,11 @@ if [ "$bash_version" \< "3.0" ]; then
 fi
 
 #ulimit -S -c 0          # Don't want any coredumps.
-set nobeep              # Who really likes this beeping?
-set complete=enhance    # Smarter autocomplete while tabbing. Autocomplete parts of filenames, eg, a.t<tab> autocomplete anonymous.txt
-set symlinks=chase      # Autoexpand symlinks
 set -o notify           # Notify of job termination immediately.
 set -o noclobber        # If set, disallow existing regular files to be overwritten by redirection of output.
 #set -o ignoreeof       # The shell will not exit upon reading EOF
 #set -o xtrace          # Print commands and their arguments as they are executed. Debug..
 
-# Enable options:
 shopt -s cdspell        # Try to correct small typos in `cd directory`
 shopt -s cdable_vars    # cd to a variable if it cant find a directory in $1 and the var exist.. etc='/etc', cd etc. See cd var section above
 shopt -s checkhash      # Let bash check the hash table for the command before executing, if not found try the PATH
@@ -130,7 +126,7 @@ if [ ! -z $load_part_bash_colormanpages ]; then
 fi
 
 # Less stuff
-if which svn &> /dev/null ; then
+if which less &> /dev/null ; then
     alias more='less'
     export PAGER=less
     export LESSCHARSET='utf-8'
