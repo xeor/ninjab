@@ -43,7 +43,6 @@ alias ss='sudo bash -l'
 alias psa='ps aux'
 alias cpr='cp -prv' # Keep rights, recursive, verbose
 alias mkdir='mkdir -p'
-alias env='env | sort'
 alias which='type -a'
 alias path='echo -e ${PATH//:/\\n}'
 alias cd-source='cd `pwd -P`' # Goto the "real" path of the directory you are in, follow symlinks
@@ -61,7 +60,7 @@ alias exit-silent='disown -a && exit'
 alias proc-pause='killall -STOP '
 alias proc-unpause='killall -CONT '
 
-if [ ! -z $load_part_aliases_lw ]; then
+if [ ! -z $load_part_aliases_ls ]; then
     case ${os} in
 	Darwin)
 	    alias ls='ls -hF'

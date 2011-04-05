@@ -102,7 +102,7 @@ if [ ! -z $load_part_bash_history ]; then
 fi
 
 # Colored man pages
-if [ ! -z $load_part_bash_colormanpages ]; then
+if [ ! -z $load_part_bash_misccolors ]; then
     case ${os} in
 	Linux)
             export LESS_TERMCAP_mb=$'\E[01;31m' # begin blinking
@@ -123,6 +123,8 @@ if [ ! -z $load_part_bash_colormanpages ]; then
 	    export LESS_TERMCAP_us=$'\E[32m' # begin underline
 	    ;;
     esac
+    # Make 'env' take away the colors, but still keep the command work with parameters
+    env() { [ -z "$1" ] && cat -t <(command env) || command env $@; }
 fi
 
 # Less stuff

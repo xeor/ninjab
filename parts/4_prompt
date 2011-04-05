@@ -25,8 +25,6 @@
 #  - Added SUDO_PS1, to fix bug#1
 #
 # Todo
-#  - Issues when sudo su
-#  - env colors are bad
 #  - Global system config file to define system type (critical (red), prod, or testing)
 #  - Also support for system category, nice to know in prod envirnoment
 #
