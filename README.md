@@ -20,7 +20,7 @@ Features
 
 Known issues
 ------------
-* *sudo su*: When sudoing to root (sudo su), we will get some problems using the prompt. Therefor, a plain prompt is set when using sudo. You can use an alias called 'ss' to sudo yourself to root without this problem. 'ss' will run 'sudo bash -l' which works as espected using the prompt.
+* *sudo su*: When sudoing to root (sudo su), we will get some problems using the prompt. Therefor, a plain prompt is set when using sudo. You can use an alias called 'ss' to sudo yourself to root without this problem. 'ss' will run 'sudo bash -l' which works as expected using the prompt.
 
 Installation
 ------------
