@@ -21,8 +21,12 @@
 #  - Fixed a bug that made a "ghost character" at the beginning of the line if error code != 0
 #    and the line was longer than >20 characters or so.. Weird bash issue..
 #  - Fixed wc -l output differ in bsd systems. Trim away everything not 0-9.
+#  - $ or # depending on the uid
+#  - Added SUDO_PS1, to fix bug#1
 #
 # Todo
+#  - Issues when sudo su
+#  - env colors are bad
 #  - Global system config file to define system type (critical (red), prod, or testing)
 #  - Also support for system category, nice to know in prod envirnoment
 #
@@ -206,6 +210,7 @@ function promptcmd () {
     fi
 
     # Exit status of the last command run. Must run the command itself from the PS1, so we must pass on this part
+
     PS1="${PS1}\`let exitstatus=\$? ; if [[ \${exitstatus} != 0 ]] ; then echo -ne \"\[${COLOR_RED}\][es:\${exitstatus}] \" ; fi\`"
 
     # Detached Screen Sessions
@@ -263,6 +268,7 @@ function promptcmd () {
 
     # Closing bracket } and $\#
     if [ ${UID} -eq 0 ]; then
+        user_mark="\[${COLOR_RED}\]#"
         if [ "${USER}" == "${LOGNAME}" ]; then
             if [[ ${SUDO_USER} ]]; then
                 PS1="${PS1}\[${COLOR_RED}\]"
@@ -273,6 +279,7 @@ function promptcmd () {
             PS1="${PS1}\[${COLOR_YELLOW}\]"
         fi
     else
+        user_mark="\[${COLOR_GREEN}\]$"
         if [ "${USER}" == "${LOGNAME}" ]; then
             PS1="${PS1}\[${COLOR_GREEN}\]"
         else
@@ -280,7 +287,7 @@ function promptcmd () {
         fi
     fi
 
-    PS1="${PS1} }\$\[${COLOR_DEFAULT}\] "
+    PS1="${PS1} }$user_mark\[${COLOR_DEFAULT}\] "
 }
 
 # Trim working dir to 1/3 the screen width
@@ -323,6 +330,8 @@ function load_prompt () {
         PROMPT_COMMAND=promptcmd
      fi
     export PS1 PROMPT_COMMAND
+
+    export SUDO_PS1="\[\h:\w\] \u\\$ " # We should not display this prompt when using sudo su, or sudo su -. It will break!
 }
 
 load_prompt

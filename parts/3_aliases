@@ -39,6 +39,7 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 
+alias ss='sudo bash -l'
 alias psa='ps aux'
 alias cpr='cp -prv' # Keep rights, recursive, verbose
 alias mkdir='mkdir -p'
