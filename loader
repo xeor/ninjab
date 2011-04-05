@@ -28,9 +28,3 @@ for i in $mydir/parts/*; do
         . $i
     fi
 done
-
-if [ ! -z $editor ]; then
-  export EDITOR=$editor
-  export SVN_EDITOR=$editor
-  export GIT_EDITOR=$editor
-fi

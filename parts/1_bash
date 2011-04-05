@@ -5,6 +5,12 @@ if [ "$bash_version" \< "3.0" ]; then
     return
 fi
 
+if [ ! -z $editor ]; then
+  export EDITOR=$editor
+  export SVN_EDITOR=$editor
+  export GIT_EDITOR=$editor
+fi
+
 #ulimit -S -c 0          # Don't want any coredumps.
 set -o notify           # Notify of job termination immediately.
 set -o noclobber        # If set, disallow existing regular files to be overwritten by redirection of output.
