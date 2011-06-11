@@ -85,6 +85,8 @@ if [ ! -z $load_part_bash_completions ]; then
     # Misc
     complete -f -o default -X '!*.+(py|PY|pyc|PYC)' python
     complete -f -o default -X '!*.+(php|PHP|php5|PHP5)' php
+
+    test -f ~/.ssh/config && test ${load_part_bash_completions_sshHostUseConfig} && complete -W '$(cat ~/.ssh/config | grep ^Host | cut -d " " -f 2)' ssh
 fi
 
 COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
