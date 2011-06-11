@@ -20,6 +20,10 @@ if [ ! -z $load_global_bash_completion ]; then
     if [ -f /etc/bash_completion ]; then
         . /etc/bash_completion
     fi
+
+    if [ -f /opt/local/etc/bash_completion ]; then
+	. /opt/local/etc/bash_completion
+    fi
 fi
 
 for i in $mydir/parts/*; do
