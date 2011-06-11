@@ -1,4 +1,4 @@
-[ -z $load_part_oneliners ] && return
+[ -z ${load_part_oneliners} ] && return
 
 # Usefull oneliners. If you have big functions (4+ lines), but them in a seperate file 100_ and up
 # Credit and explain (if not obious) all snipets!

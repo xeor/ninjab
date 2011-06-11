@@ -1,14 +1,14 @@
-[ -z $load_part_bash ] && return
+[ -z ${load_part_bash} ] && return
 
 # Not really sure if everything here needs v3.x and above. little FIXME
 if [ "$bash_version" \< "3.0" ]; then
     return
 fi
 
-if [ ! -z $editor ]; then
-  export EDITOR=$editor
-  export SVN_EDITOR=$editor
-  export GIT_EDITOR=$editor
+if [ ! -z ${editor} ]; then
+  export EDITOR=${editor}
+  export SVN_EDITOR=${editor}
+  export GIT_EDITOR=${editor}
 fi
 
 #ulimit -S -c 0          # Don't want any coredumps.
@@ -36,7 +36,7 @@ unset MAILCHECK         # Don't want the shell to warn me of incoming mail.
 ##
 # bash completion
 ##
-if [ ! -z $load_part_bash_completions ]; then
+if [ ! -z ${load_part_bash_completions} ]; then
     complete -A hostname   rsh rcp telnet rlogin r ftp ping disk ssh
     complete -A export     printenv
     complete -A variable   export local readonly unset
@@ -86,13 +86,13 @@ if [ ! -z $load_part_bash_completions ]; then
     complete -f -o default -X '!*.+(py|PY|pyc|PYC)' python
     complete -f -o default -X '!*.+(php|PHP|php5|PHP5)' php
 
-    test -f ~/.ssh/config && test ${load_part_bash_completions_sshHostUseConfig} && complete -W '$(cat ~/.ssh/config | grep ^Host | cut -d " " -f 2)' ssh
+    [ -f ~/.ssh/config -a ${load_part_bash_completions_sshHostUseConfig:-""} ] && complete -W '$(cat ~/.ssh/config | grep ^Host | cut -d " " -f 2)' ssh
 fi
 
 COMP_WORDBREAKS=${COMP_WORDBREAKS/=/}
 
 export TIMEFORMAT=$'\nreal %3R\tuser %3U\tsys %3S\tpcpu %P\n'
-export HOSTFILE=$HOME/.hosts    # Put list of remote hosts in ~/.hosts ...
+export HOSTFILE=${HOME}/.hosts    # Put list of remote hosts in ~/.hosts ...
 
 # FIXME, unsure if any other OS should handle this the same way. LSCOLORS should not be overwritten if set..?
 case ${os} in
@@ -102,15 +102,15 @@ case ${os} in
 	;;
 esac
 
-if [ ! -z $load_part_bash_history ]; then
+if [ ! -z ${load_part_bash_history} ]; then
     export HISTTIMEFORMAT="%F %T > "
-    export HISTIGNORE="&:[ ]*:bg:fg:ll:ls:ls -l:h:history:ps aux"
+    [ -z ${load_part_bash_history_ignoreCommon} ] || export HISTIGNORE="&:[ ]*:bg:fg:ll:ls:ls -l:h:history:ps aux"
     export HISTCONTROL=ignoredups
-    export HISTFILESIZE=2000 # Maybe to much..?
+    export HISTFILESIZE=${load_part_bash_history_max:-2000}
 fi
 
 # Colored man pages
-if [ ! -z $load_part_bash_misccolors ]; then
+if [ ! -z ${load_part_bash_misccolors} ]; then
     case ${os} in
 	Linux)
             export LESS_TERMCAP_mb=$'\E[01;31m' # begin blinking

@@ -14,13 +14,16 @@ case ${OS} in
      Darwin)
          alias chmod='chmod -vv'
          alias chown='chown -vv'
+
+	 # head and tail smart height isnt handled very well in osx since it wont
+	 # overwrite -n if its already defined. tail -n 30 -n 10 will fail.
          ;;
 
      Linux)
          alias chmod='chmod -c'
          alias chown='chown -c'
 
-         # Makes them fill the screen by default (FIXME, not sure if this works in BSD)
+         # Makes them fill the screen by default
          alias head='head -n $(($LINES-2))'
          alias tail='tail -n $(($LINES-2))'
          ;;
@@ -48,7 +51,7 @@ alias path='echo -e ${PATH//:/\\n}'
 alias cd-source='cd `pwd -P`' # Goto the "real" path of the directory you are in, follow symlinks
 
 # One letters
-if [ ! -z $load_part_aliases_oneletters ]; then
+if [ ! -z ${load_part_aliases_oneletters} ]; then
     alias j='jobs -l'
     alias c='clear' # Quick clear
     alias l='ll'
@@ -60,7 +63,7 @@ alias exit-silent='disown -a && exit'
 alias proc-pause='killall -STOP '
 alias proc-unpause='killall -CONT '
 
-if [ ! -z $load_part_aliases_ls ]; then
+if [ ! -z ${load_part_aliases_ls} ]; then
     case ${os} in
 	Darwin)
 	    alias ls='ls -hF'

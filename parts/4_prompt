@@ -119,14 +119,16 @@ function promptcmd () {
     PS1="${TITLEBAR}"
 
     # Test for day change.
-    if [ -z $DAY ] ; then
-        export DAY=$(date +%A)
-    else
-        local today=$(date +%A)
-        if [ "${DAY}" != "${today}" ]; then
-            PS1="${PS1}\n\[${COLOR_GREEN}\]Day changed to $(date '+%A, %d %B %Y').\n"
-            export DAY=$today
-       fi
+    if [ -z ${load_part_prompt_notifyDaychange} ]; then
+	if [ -z $DAY ] ; then
+            export DAY=$(date +%A)
+	else
+            local today=$(date +%A)
+            if [ "${DAY}" != "${today}" ]; then
+		PS1="${PS1}\n\[${COLOR_GREEN}\]Day changed to $(date '+%A, %d %B %Y').\n"
+		export DAY=$today
+	    fi
+	fi
     fi
 
     # User
