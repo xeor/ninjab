@@ -23,10 +23,7 @@
 #  - Fixed wc -l output differ in bsd systems. Trim away everything not 0-9.
 #  - $ or # depending on the uid
 #  - Added SUDO_PS1, to fix bug#1
-#
-# Todo
-#  - Global system config file to define system type (critical (red), prod, or testing)
-#  - Also support for system category, nice to know in prod envirnoment
+#  - Support for system type and system category
 #
 # Tested
 #  - OK on OSX 10.6.7 with bash 3.2.48
@@ -116,10 +113,42 @@ function promptcmd () {
             local TITLEBAR=''
             ;;
     esac
-    PS1="${TITLEBAR}"
+
+    PS1=""
+
+    # System type and category
+    if [ -z "${system_type}" ]; then
+	if [ -z "${system_category}" ]; then
+	    [ -f /etc/sysinfo ] && source /etc/sysinfo
+	    [ -f ~/.sysinfo ] && source ~/.sysinfo
+	fi
+    else
+	if [ "${system_type}" == "ignore" ]; then
+	    unset system_type
+	fi
+    fi
+    case ${system_type} in
+	"crit"|"critical")
+	    local system_type_color="\[${COLOR_RED}\]"
+	    ;;
+	"prod")
+	    local system_type_color="\[${COLOR_YELLOW}\]"
+	    ;;
+	"test")
+	    local system_type_color="\[${COLOR_GREEN}\]"
+	    ;;
+    esac
+    if [ -z "${system_category}" ]; then
+	if [ ! -z "${system_type}" ]; then
+	    local system_category="${system_type}"
+	fi
+    fi
+    [ -z "${system_category}" ] || PS1="${PS1}${system_type_color:-""}(${system_category}) "
+
+    PS1="${PS1}${TITLEBAR}"
 
     # Test for day change.
-    if [ -z ${load_part_prompt_notifyDaychange} ]; then
+    if [ ! -z ${load_part_prompt_notifyDaychange} ]; then
 	if [ -z $DAY ] ; then
             export DAY=$(date +%A)
 	else
