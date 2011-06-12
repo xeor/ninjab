@@ -43,6 +43,8 @@ load_part_bash_history=1 # Timestamp in history, ignore dupes
 load_part_aliases=1
 load_part_aliases_oneletters=1 # Load a couple of one-letters aliases
 load_part_aliases_ls=1 # More out of the default 'ls'
+load_part_aliases_ls_shortcuts=1 # Load . .. ... .... aliases for pwd, cd .., cd ../.. and so on..
+#load_part_aliases_same=1 # If some commands will get common enhancements, like rm will be 'rm -v -i', comment out to deny aliasing the commands themself.
 
 # A more usefull bash prompt
 load_part_prompt=1

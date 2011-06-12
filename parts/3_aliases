@@ -12,41 +12,49 @@
 # ch... Turn on a little verbosety
 case ${OS} in
      Darwin)
-         alias chmod='chmod -vv'
-         alias chown='chown -vv'
+	if [ ! -z ${load_part_aliases_same} ]; then
+            alias chmod='chmod -vv'
+            alias chown='chown -vv'
 
-	 # head and tail smart height isnt handled very well in osx since it wont
-	 # overwrite -n if its already defined. tail -n 30 -n 10 will fail.
-         ;;
+            # head and tail smart height isnt handled very well in osx since it wont
+            # overwrite -n if its already defined. tail -n 30 -n 10 will fail.
+	fi
+        ;;
 
      Linux)
-         alias chmod='chmod -c'
-         alias chown='chown -c'
+	if [ ! -z ${load_part_aliases_same} ]; then
+            alias chmod='chmod -c'
+            alias chown='chown -c'
 
-         # Makes them fill the screen by default
-         alias head='head -n $(($LINES-2))'
-         alias tail='tail -n $(($LINES-2))'
-         ;;
+            # Makes them fill the screen by default
+            alias head='head -n $(($LINES-2))'
+            alias tail='tail -n $(($LINES-2))'
+	fi
+        ;;
 esac
 
 # Prevents accidentally clobbering files, and be verbose.
-alias rm='rm -v -i'
-alias cp='cp -v -i'
-alias mv='mv -v -i'
+if [ ! -z ${load_part_aliases_same} ]; then
+    alias rm='rm -v -i'
+    alias cp='cp -v -i'
+    alias mv='mv -v -i'
+fi
 
 # lazy cd ..
-alias .='pwd'
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias ......='cd ../../../../..'
+if [ ! -z ${load_part_aliases_ls_shortcuts} ]; then
+    alias .='pwd'
+    alias ..='cd ..'
+    alias ...='cd ../..'
+    alias ....='cd ../../..'
+    alias .....='cd ../../../..'
+    alias ......='cd ../../../../..'
+fi
 
 alias ss='sudo bash -l'
 alias psa='ps aux'
 alias cpr='cp -prv' # Keep rights, recursive, verbose
-alias mkdir='mkdir -p'
-alias which='type -a'
+[ ! -z ${load_part_aliases_same} ] && alias mkdir='mkdir -p'
+[ ! -z ${load_part_aliases_same} ] && alias which='type -a'
 alias path='echo -e ${PATH//:/\\n}'
 alias cd-source='cd `pwd -P`' # Goto the "real" path of the directory you are in, follow symlinks
 
@@ -66,11 +74,11 @@ alias proc-unpause='killall -CONT '
 if [ ! -z ${load_part_aliases_ls} ]; then
     case ${os} in
 	Darwin)
-	    alias ls='ls -hF'
+	    [ ! -z ${load_part_aliases_same} ] && alias ls='ls -hF'
 	    alias ll='ls -lO' # View osx attributes too
 	    ;;
 	Linux)
-	    alias ls='ls -hF --color'  # add colors for filetype recognition
+	    [ ! -z ${load_part_aliases_same} ] && alias ls='ls -hF --color'  # add colors for filetype recognition
 	    alias ll='ls -l --group-directories-first'
 	    alias lx='ls -lXB'         # sort by extension
 	    ;;
@@ -85,6 +93,7 @@ if [ ! -z ${load_part_aliases_ls} ]; then
     alias lr='ls -lR'          # recursive ls
 
     if which tree &> /dev/null; then
-	alias tree='tree -Csu'     # nice alternative to 'recursive ls'
+	[ ! -z ${load_part_aliases_same} ] && alias tree='tree -Csu'     # nice alternative to 'recursive ls'
     fi
 fi
+
