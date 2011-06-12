@@ -10,8 +10,6 @@
 #  - Added exit code status if >0 (Found on a forum, from Dave Vehrs)
 #  - Minor changes, dont remember what it was..
 #  - Display svn/git version if in svn/git directory
-#  - Added automatic creating of aliases for directories
-#    in current folder. Can be turned off..
 #  - Removed automatic creating of aliases. It was slow and really
 #    not so usefull.
 #  - Changed the way of getting our own cmddline and PPID cmdline,
