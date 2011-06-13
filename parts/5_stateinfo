@@ -1,0 +1,84 @@
+[ -z ${load_part_stateinfo} ] && return
+
+COLOR_WHITE='\033[1;37m'
+COLOR_LIGHTGRAY='033[0;37m'
+COLOR_GRAY='\033[1;30m'
+COLOR_BLACK='\033[0;30m'
+COLOR_RED='\033[0;31m'
+COLOR_LIGHTRED='\033[1;31m'
+COLOR_GREEN='\033[0;32m'
+COLOR_LIGHTGREEN='\033[1;32m'
+COLOR_BROWN='\033[0;33m'
+COLOR_YELLOW='\033[1;33m'
+COLOR_BLUE='\033[0;34m'
+COLOR_LIGHTBLUE='\033[1;34m'
+COLOR_PURPLE='\033[0;35m'
+COLOR_PINK='\033[1;35m'
+COLOR_CYAN='\033[0;36m'
+COLOR_LIGHTCYAN='\033[1;36m'
+NC='\033[0m'
+
+# echo -e "${COLOR_YELLOW} ** This text is yellow example ** ${NC}"
+
+function filler() {
+    char=${1:-'*'}
+    count=${2:-$((${COLUMNS:-78}))}
+    printf -vch  "%${count}s" ""
+    printf "%s\n" "${ch// /${char}}"
+}
+
+function echoi() {
+    headline="${1}: "
+    char='*'
+
+    len=${3:-$((${COLUMNS:-78}-1))}
+    local IFS=$(echo -en "\n\b")
+
+    if [ -z "${2}" ]; then
+	printf "%-${len}s${char}%s\n" "* ${1}"
+	return
+    fi
+
+    if [ ${#2} -ge $((${len}-${#headline})) ]; then
+	str=$(echo "${2}" | fold -s -w $((${len}-12)) | sed -e 's/^/   /g')
+	echoi "${headline}"
+	for l in ${str}; do
+	    echoi "  ${l}"
+	done
+    else
+	printf "%-${len}s${char}%s" "* ${headline}${2}"
+    fi
+}
+
+function stateinfo() {
+    local username=$(whoami)
+    local netstat_tcp=$(netstat -n -p tcp)
+
+    filler
+    echoi "Current user (${username}):"
+    echoi "  Your IDs" "$(id)"
+    echoi "  You own" "$(($(ps u -U ${username} | wc -l) - 1)) / $(($(ps ax | wc -l) - 1)) processes"
+    echoi
+    echoi "System info:"
+    echoi "  Uptime" "$(uptime)"
+    echoi "  Current runlevel" "$(who -r | sed -n 's/.*run-level \([0-9]\)/\1/p')"
+    echoi "  Current logged in users" "$(users)"
+    echoi
+    echoi "Network info:"
+    echoi "  LISTEN connections" "$(echo -e ${netstat_tcp} | grep -o LISTEN | wc -l | sed 's/[^0-9]//g')"
+    echoi "  ESTABLISHED connections" "$(echo -e ${netstat_tcp} | grep -o ESTABLISHED | wc -l | sed 's/[^0-9]//g')"
+    echoi "  TIME_WAIT connections" "$(echo -e ${netstat_tcp} | grep -o TIME_WAIT | wc -l | sed 's/[^0-9]//g')"
+    echoi "  CLOSE_WAIT connections" "$(echo -e ${netstat_tcp} | grep -o CLOSE_WAIT | wc -l | sed 's/[^0-9]//g')"
+    echoi
+    echoi "Current directory:"
+    echoi "  Directory count" "$(($(find . -maxdepth 1 -type d | wc -l)-1))"
+    echoi "  .directory count" "$(find . -maxdepth 1 -type d -name '.*' | wc -l | sed 's/[^0-9]//g')"
+    echoi "  File count" "$(find . -maxdepth 1 -type f | wc -l | sed 's/[^0-9]//g')"
+    echoi "  .file count" "$(find . -maxdepth 1 -type f -name '.*' | wc -l | sed 's/[^0-9]//g')"
+    filler
+}
+if [ ! -z ${load_part_stateinfo_alias} ]; then
+    a="alias ${load_part_stateinfo_alias}='stateinfo'"
+    eval $a
+    unset a
+fi
