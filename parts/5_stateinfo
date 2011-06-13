@@ -39,7 +39,9 @@ function echoi() {
 	return
     fi
 
-    if [ ${#2} -ge $((${len}-${#headline})) ]; then
+    linecount=$(echo -e "$2" | wc -l | sed -e 's/[^0-9]//g')
+
+    if [ ${#2} -ge $((${len}-${#headline})) -o ${linecount} -gt 1 ]; then
 	str=$(echo "${2}" | fold -s -w $((${len}-12)) | sed -e 's/^/   /g')
 	echoi "${headline}"
 	for l in ${str}; do
@@ -49,6 +51,39 @@ function echoi() {
 	printf "%-${len}s${char}%s" "* ${headline}${2}"
     fi
 }
+
+function gitInfo() {
+    if ! which git &> /dev/null; then
+	return # Git not available
+    fi
+    git status &> /dev/null
+    sc=$?
+    if [ ${sc} != 0 ]; then
+	return # No git repo here..
+    fi
+
+    echoi
+    echoi "GIT"
+    echoi "  Git status" "$(git status -s)"
+}
+
+function svnInfo() {
+    if ! which svn &> /dev/null; then
+	return # Svn not available
+    fi
+    svn info &> /dev/null
+    sc=$?
+    if [ ${sc} != 0 ]; then
+	return # No svn repo here..
+    fi
+
+    echoi
+    echoi "SVN"
+    echoi "  Svn info" "$(svn info)"
+    echoi
+    echoi "  Svn  status" "$(svn status)"
+}
+
 
 function stateinfo() {
     local username=$(whoami)
@@ -72,10 +107,14 @@ function stateinfo() {
     echoi "  CLOSE_WAIT connections" "$(echo -e ${netstat_tcp} | grep -o CLOSE_WAIT | wc -l | sed 's/[^0-9]//g')"
     echoi
     echoi "Current directory:"
+    echoi "  Full path" "$(pwd)"
+    echoi "  Current directory" "$(ls -ld .)"
     echoi "  Directory count" "$(($(find . -maxdepth 1 -type d | wc -l)-1))"
     echoi "  .directory count" "$(find . -maxdepth 1 -type d -name '.*' | wc -l | sed 's/[^0-9]//g')"
     echoi "  File count" "$(find . -maxdepth 1 -type f | wc -l | sed 's/[^0-9]//g')"
     echoi "  .file count" "$(find . -maxdepth 1 -type f -name '.*' | wc -l | sed 's/[^0-9]//g')"
+    gitInfo
+    svnInfo
     filler
 }
 
