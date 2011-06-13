@@ -40,7 +40,7 @@ load_part_bash_history=1 # Timestamp in history, ignore dupes
 #load_part_oneliners=1
 
 load_part_stateinfo=1
-load_part_stateinfo_alias='?' # Alias for the function which will give you current state information. If commented out, use 'stateinfo'.
+#load_part_stateinfo_alias='?' # Alias for the function which will give you current state information. If commented out, use 'stateinfo'.
 
 # Shortcuts to a more effective usage of different commands
 load_part_aliases=1

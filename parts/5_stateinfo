@@ -65,6 +65,7 @@ function stateinfo() {
     echoi "  Current logged in users" "$(users)"
     echoi
     echoi "Network info:"
+    echoi "  IPv4 adresses" "$(/sbin/ifconfig 2> /dev/null | awk '/inet / {print $2}'  | sed -e :a -e '$!N;s/\n/, /;ta' -e 's/[^0-9\., ]//g')"
     echoi "  LISTEN connections" "$(echo -e ${netstat_tcp} | grep -o LISTEN | wc -l | sed 's/[^0-9]//g')"
     echoi "  ESTABLISHED connections" "$(echo -e ${netstat_tcp} | grep -o ESTABLISHED | wc -l | sed 's/[^0-9]//g')"
     echoi "  TIME_WAIT connections" "$(echo -e ${netstat_tcp} | grep -o TIME_WAIT | wc -l | sed 's/[^0-9]//g')"
@@ -77,6 +78,7 @@ function stateinfo() {
     echoi "  .file count" "$(find . -maxdepth 1 -type f -name '.*' | wc -l | sed 's/[^0-9]//g')"
     filler
 }
+
 if [ ! -z ${load_part_stateinfo_alias} ]; then
     a="alias ${load_part_stateinfo_alias}='stateinfo'"
     eval $a
