@@ -20,6 +20,12 @@ NC='\033[0m'
 
 # echo -e "${COLOR_YELLOW} ** This text is yellow example ** ${NC}"
 
+_b_trim() {
+    while read s; do
+	echo "${s}" | sed 's/^ *//g'
+    done
+}
+
 function filler() {
     char=${1:-'*'}
     count=${2:-$((${COLUMNS:-78}))}
@@ -84,12 +90,45 @@ function svnInfo() {
     echoi "  Svn  status" "$(svn status)"
 }
 
+function getFullPath() {
+    curr_dir=$(pwd)
+    if [[ $1 == /* ]]; then
+	dir=$(dirname $1)
+    else
+	dir="${curr_dir}/$(dirname $1)"
+    fi
 
-function stateinfo() {
+    fname=$(basename $1)
+    cd $dir
+    full_path="$(pwd)/$fname"
+    cd $curr_dir
+    echo $full_path
+}
+
+function stateinfo_directory() {
+    local folderpath=$(getFullPath "${1}")
+    echoi "Info about directory ${folderpath}"
+    cd "${folderpath}" &> /dev/null
+    if [ $? != 0 ]; then
+	echoi " --- Unable to access that directory ---"
+	return
+    fi
+    gitInfo
+    svnInfo
+    cd - &> /dev/null
+}
+
+function stateinfo_file() {
+    local filepath=$(getFullPath "${1}")
+    #local filename=$(basepath "${filepath}")
+    echoi "Info about file ${filepath}"
+    echoi "Guessed filetype" "$(file ${filepath} | tr -d "${filepath}:" | _b_trim)"
+}
+
+function stateinfo_general() {
     local username=$(whoami)
     local netstat_tcp=$(netstat -n -p tcp)
 
-    filler
     echoi "Current user (${username}):"
     echoi "  Your IDs" "$(id)"
     echoi "  You own" "$(($(ps u -U ${username} | wc -l) - 1)) / $(($(ps ax | wc -l) - 1)) processes"
@@ -115,6 +154,21 @@ function stateinfo() {
     echoi "  .file count" "$(find . -maxdepth 1 -type f -name '.*' | wc -l | sed 's/[^0-9]//g')"
     gitInfo
     svnInfo
+}
+
+function stateinfo() {
+    filler
+    if [ -z ${1} ]; then
+	stateinfo_general
+    else
+	if test -d "${1}"; then
+	    stateinfo_directory "${1}"
+	elif test -f "${1}"; then
+	    stateinfo_file "${1}"
+	else
+	    echoi "${1} does not exists or is not a normal directory or file."
+	fi
+    fi
     filler
 }
 
