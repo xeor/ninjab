@@ -20,7 +20,7 @@ NC='\033[0m'
 
 # echo -e "${COLOR_YELLOW} ** This text is yellow example ** ${NC}"
 
-_b_trim() {
+function _b_trim() {
     while read s; do
 	echo "${s}" | sed 's/^ *//g'
     done
