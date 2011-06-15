@@ -26,37 +26,69 @@ load_global_bash_completion=1	# Try to load /etc/bash_completion or /opt/local/e
 # Sub_options of parts wont get loaded if you comment out the main part itself..
 #---------------------------------------------------------------------
 
+########################################
+# parts/1_bash
+#
 # Bash tweeks
+########################################
 load_part_bash=1
 load_part_bash_completions=1
 load_part_bash_completions_genhostfile=1 # Generate $HOSTFILE (usually ~/.hosts) for use by eg ping ftp ssh.. FIXME, handle generation...
 load_part_bash_completions_sshHostUseConfig=1 # Try to use ~/.ssh/config to complete ssh completion instead of hostfile
 load_part_bash_misccolors=1 # Enable colors on example man pages.
-
+#
 load_part_bash_history=1 # Timestamp in history, ignore dupes
 #load_part_bash_history_max=3000 # This is set to 2000 if not defined
 #load_part_bash_history_ignoreCommon=1 # Ignore common typed commands (like ls, fg, bg, ps aux)
 
+
+########################################
+# parts/2_oneliners
+########################################
 #load_part_oneliners=1
 
-load_part_stateinfo=1
-#load_part_stateinfo_alias='?' # Alias for the function which will give you current state information. If commented out, use 'stateinfo'.
 
+########################################
+# parts/3_aliases
+#
 # Shortcuts to a more effective usage of different commands
+########################################
 load_part_aliases=1
 load_part_aliases_oneletters=1 # Load a couple of one-letters aliases
 load_part_aliases_ls=1 # More out of the default 'ls'
 load_part_aliases_ls_shortcuts=1 # Load . .. ... .... aliases for pwd, cd .., cd ../.. and so on..
 load_part_aliases_same=1 # To get common enhancements for some commands, like rm will be 'rm -v -i', comment out to deny self aliasing.
 
+
+########################################
+# parts/4_prompt
+#
 # A more usefull bash prompt
+########################################
 load_part_prompt=1
 #load_part_prompt_notifyDaychange=1
-
+#
 # Set static info at the beginning of the bash prompt. Can also be defined in /etc/sysinfo or ~/.sysinfo
 # system_type makes the color, crit is red, prod is yellow and test is green. "ignore" will makes it skip sysinfo file checks
 system_type="ignore" # crit|prod|test or ignore
-
+#
 # This is static text at the beginning of the prompt. Will have the color defined above if any.
 # Can also be defined in /etc/sysinfo or ~/.sysinfo
 #system_category="webserver"
+
+
+########################################
+# parts/5_stateinfo
+#
+# Gives you as much info as it can about the current state, folder or file.
+########################################
+load_part_stateinfo=1
+load_part_stateinfo_alias='?' # Alias for the function which will give you current state information. If commented out, use 'stateinfo'.
+
+
+########################################
+# parts/6_pipes
+#
+# Holds function which can be used as pipes.
+########################################
+load_part_pipes=1
