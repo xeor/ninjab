@@ -20,12 +20,6 @@ NC='\033[0m'
 
 # echo -e "${COLOR_YELLOW} ** This text is yellow example ** ${NC}"
 
-function _b_trim() {
-    while read s; do
-	echo "${s}" | sed 's/^ *//g'
-    done
-}
-
 function filler() {
     char=${1:-'*'}
     count=${2:-$((${COLUMNS:-78}))}
@@ -122,7 +116,9 @@ function stateinfo_file() {
     local filepath=$(getFullPath "${1}")
     #local filename=$(basepath "${filepath}")
     echoi "Info about file ${filepath}"
-    echoi "Guessed filetype" "$(file ${filepath} | tr -d "${filepath}:" | _b_trim)"
+    echoi "Guessed filetype" "$(file ${filepath})"  # FIXME: Break the frame on eg /bin/bash on osx
+    echoi "Full stat output" "$(stat ${filepath})"
+    echoi "Open references (lsof)" "$(lsof ${filepath} 2> /dev/null)"
 }
 
 function stateinfo_general() {
