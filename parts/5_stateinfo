@@ -57,15 +57,19 @@ function gitInfo() {
     if ! which git &> /dev/null; then
 	return # Git not available
     fi
-    git status &> /dev/null
-    sc=$?
-    if [ ${sc} != 0 ]; then
-	return # No git repo here..
+
+    if ! git rev-parse --git-dir &> /dev/null; then
+	return # No git repo in here
+    fi
+
+    local gitout=$(git status -s 2>&1)
+    if [[ ${gitout} == '' ]]; then
+	local gitout="<< no output >>"
     fi
 
     echoi
     echoi "GIT"
-    echoi "  Git status" "$(git status -s)"
+    echoi "  Git status" "${gitout}"
 }
 
 function svnInfo() {
