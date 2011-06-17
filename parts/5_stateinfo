@@ -32,23 +32,24 @@ function echoi() {
     char='*'
 
     len=${3:-$((${COLUMNS:-78}-1))}
-    local IFS=$(echo -en "\n\b")
+    local IFS=$(echo -en "\n\b") # Sets IFS to a newline
 
     if [ -z "${2}" ]; then
-	printf "%-${len}s${char}%s\n" "* ${1}"
+	printf "%-${len}s${char}%s\n" "${char} ${1}"
 	return
     fi
 
     linecount=$(echo -e "$2" | wc -l | sed -e 's/[^0-9]//g')
 
     if [ ${#2} -ge $((${len}-${#headline})) -o ${linecount} -gt 1 ]; then
-	str=$(echo "${2}" | fold -s -w $((${len}-12)) | sed -e 's/^/   /g')
+	# Take away colors, convert tabs to spaces, wrap multilines by the screenlength - 12, and then add some spaces at the front of each line
+	str=$(echo "${2}" | sed -e "s:\x1B\[[0-9;]*[mK]::g" | expand | fold -s -w $((${len}-12)) | sed -e 's/^/   /g')
 	echoi "${headline}"
 	for l in ${str}; do
 	    echoi "  ${l}"
 	done
     else
-	printf "%-${len}s${char}%s" "* ${headline}${2}"
+	printf "%-${len}s${char}%s" "${char} ${headline}${2}"
     fi
 }
 
@@ -123,7 +124,7 @@ function stateinfo_file() {
 
 function stateinfo_general() {
     local username=$(whoami)
-    local netstat_tcp=$(netstat -n -p tcp)
+    local netstat_tcp=$(netstat -n 2> /dev/null)
 
     echoi "Current user (${username}):"
     echoi "  Your IDs" "$(id)"

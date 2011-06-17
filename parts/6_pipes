@@ -3,7 +3,7 @@
 # sed oneliners doesnt really need a while loop to work as it can just be echo $1 | sed ..
 
 function rem-colors() {
-    while read s; do echo "${s}" | sed "s/\x1B\[([0-9]{1,2}(;[0-9]{1,2})?)?[m|K]//g"; done
+    while read s; do echo "${s}" | sed -e "s:\x1B\[[0-9;]*[mK]::g"; done
 }
 
 function ltrim() {
