@@ -74,19 +74,26 @@ function gitInfo() {
 
 function svnInfo() {
     if ! which svn &> /dev/null; then
-	return # Svn not available
+        return # Svn not available                                                                                                                                                                                                  fi
+
+    if [ ! -d .svn ]; then
+        return # No valid svn repo here..                                                                                                                                                                                           fi
+
+    local svnstatout=$(svn status 2>&1)
+    if [[ ${svnstatout} == '' ]]; then
+        local svnstatout="<< no output >>"
     fi
-    svn info &> /dev/null
-    sc=$?
-    if [ ${sc} != 0 ]; then
-	return # No svn repo here..
+
+    local svninfoout=$(svn info 2>&1)
+    if [[ ${svninfoout} == '' ]]; then
+        local svninfoout="<< no output >>"
     fi
 
     echoi
     echoi "SVN"
-    echoi "  Svn info" "$(svn info)"
+    echoi "  Svn info" "${svninfoout}"
     echoi
-    echoi "  Svn  status" "$(svn status)"
+    echoi "  Svn  status" "${svnstatout}"
 }
 
 function getFullPath() {

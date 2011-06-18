@@ -220,7 +220,7 @@ function promptcmd () {
 	if which svn &> /dev/null ; then
 	    local DIRTY REV=$(svnversion . 2>/dev/null)
 	    [ "$REV" ] || REV='?'
-	    [ "$(svn st)" ] && DIRTY='*'
+	    [ "$(svn st &> /dev/null)" ] && DIRTY='*'
             PS1="${PS1}\[${COLOR_PURPLE}\][svn:${REV}${DIRTY}] "
 	fi
     fi
