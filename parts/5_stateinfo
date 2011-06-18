@@ -53,6 +53,17 @@ function echoi() {
     fi
 }
 
+function getOSinfo() {
+    os_version_file=$(find /etc -maxdepth 1 -type f -name '*_version' -o -name '*_release' -o -name '*-version' -o -name '*-release' 2> /dev/null | head -n 1)
+    if [ ! -z ${os_version_file} ]; then
+	os_version=$(cat ${os_version_file})
+	echo "OS: ${os_version}, from ${os_version_file}"
+    else
+	echo "OS: No /etc/[_,-][release,version] found"
+    fi
+    echo "Kernel: $(uname -a)"
+}
+
 function gitInfo() {
     if ! which git &> /dev/null; then
 	return # Git not available
@@ -63,7 +74,7 @@ function gitInfo() {
     fi
 
     local gitout=$(git status -s 2>&1)
-    if [[ ${gitout} == '' ]]; then
+    if [ -z $"{gitout}" ]; then
 	local gitout="<< no output >>"
     fi
 
@@ -74,18 +85,20 @@ function gitInfo() {
 
 function svnInfo() {
     if ! which svn &> /dev/null; then
-        return # Svn not available                                                                                                                                                                                                  fi
+        return # Svn not available
+    fi
 
     if [ ! -d .svn ]; then
-        return # No valid svn repo here..                                                                                                                                                                                           fi
+        return # No valid svn repo here..
+    fi
 
     local svnstatout=$(svn status 2>&1)
-    if [[ ${svnstatout} == '' ]]; then
+    if [ -z "${svnstatout}" ]; then
         local svnstatout="<< no output >>"
     fi
 
     local svninfoout=$(svn info 2>&1)
-    if [[ ${svninfoout} == '' ]]; then
+    if [ "${svninfoout}" ]; then
         local svninfoout="<< no output >>"
     fi
 
@@ -142,6 +155,7 @@ function stateinfo_general() {
     echoi "  You own" "$(($(ps u -U ${username} | wc -l) - 1)) / $(($(ps ax | wc -l) - 1)) processes"
     echoi
     echoi "System info:"
+    echoi "  OS version" "$(getOSinfo)"
     echoi "  Uptime" "$(uptime)"
     echoi "  Current runlevel" "$(who -r | sed -n 's/.*run-level \([0-9]\)/\1/p')"
     echoi "  Current logged in users" "$(users)"
