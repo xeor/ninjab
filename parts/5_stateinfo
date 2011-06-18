@@ -1,5 +1,8 @@
 [ -z ${load_part_stateinfo} ] && return
 
+# Todo
+#  * SELinux info
+
 COLOR_WHITE='\033[1;37m'
 COLOR_LIGHTGRAY='033[0;37m'
 COLOR_GRAY='\033[1;30m'
@@ -62,6 +65,17 @@ function getOSinfo() {
 	echo "OS: No /etc/[_,-][release,version] found"
     fi
     echo "Kernel: $(uname -a)"
+}
+
+function folderInfo() {
+    echoi "  Full path" "$(pwd)"
+    echoi "  Permissions" "$(ls -ld .)"
+    echoi "  Directory count" "$(($(find . -maxdepth 1 -type d | wc -l)-1))"
+    echoi "  .directory count" "$(find . -maxdepth 1 -type d -name '.*' | wc -l | sed 's/[^0-9]//g')"
+    echoi "  File count" "$(find . -maxdepth 1 -type f | wc -l | sed 's/[^0-9]//g')"
+    echoi "  .file count" "$(find . -maxdepth 1 -type f -name '.*' | wc -l | sed 's/[^0-9]//g')"
+    echoi
+    echoi   "Full stat output" "$(stat .)"
 }
 
 function gitInfo() {
@@ -132,6 +146,7 @@ function stateinfo_directory() {
 	echoi " --- Unable to access that directory ---"
 	return
     fi
+    folderInfo
     gitInfo
     svnInfo
     cd - &> /dev/null
@@ -141,7 +156,7 @@ function stateinfo_file() {
     local filepath=$(getFullPath "${1}")
     #local filename=$(basepath "${filepath}")
     echoi "Info about file ${filepath}"
-    echoi "Guessed filetype" "$(file ${filepath})"  # FIXME: Break the frame on eg /bin/bash on osx
+    echoi "Guessed filetype" "$(file ${filepath})"
     echoi "Full stat output" "$(stat ${filepath})"
     echoi "Open references (lsof)" "$(lsof ${filepath} 2> /dev/null)"
 }
@@ -168,12 +183,7 @@ function stateinfo_general() {
     echoi "  CLOSE_WAIT connections" "$(echo -e ${netstat_tcp} | grep -o CLOSE_WAIT | wc -l | sed 's/[^0-9]//g')"
     echoi
     echoi "Current directory:"
-    echoi "  Full path" "$(pwd)"
-    echoi "  Current directory" "$(ls -ld .)"
-    echoi "  Directory count" "$(($(find . -maxdepth 1 -type d | wc -l)-1))"
-    echoi "  .directory count" "$(find . -maxdepth 1 -type d -name '.*' | wc -l | sed 's/[^0-9]//g')"
-    echoi "  File count" "$(find . -maxdepth 1 -type f | wc -l | sed 's/[^0-9]//g')"
-    echoi "  .file count" "$(find . -maxdepth 1 -type f -name '.*' | wc -l | sed 's/[^0-9]//g')"
+    folderInfo
     gitInfo
     svnInfo
 }
