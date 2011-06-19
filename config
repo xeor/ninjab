@@ -84,7 +84,7 @@ system_type="ignore" # crit|prod|test or ignore
 ########################################
 load_part_stateinfo=1
 load_part_stateinfo_alias='?' # Alias for the function which will give you current state information. If commented out, use 'stateinfo'.
-
+load_part_stateinfo_maxlines=50 # How many lines should we accept before asking if we should display them or not, comment out for unlimited
 
 ########################################
 # parts/6_pipes

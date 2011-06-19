@@ -23,6 +23,16 @@ NC='\033[0m'
 
 # echo -e "${COLOR_YELLOW} ** This text is yellow example ** ${NC}"
 
+trap "__cleanup_interrupt" 2
+
+function __cleanup_interrupt() {
+    echo
+    echo "Aborting!"
+    echo
+    stty echo
+    exit 1
+}
+
 function filler() {
     char=${1:-'*'}
     count=${2:-$((${COLUMNS:-78}))}
@@ -42,12 +52,22 @@ function echoi() {
 	return
     fi
 
-    linecount=$(echo -e "$2" | wc -l | sed -e 's/[^0-9]//g')
+    linecount=$(echo -e "$2" | wc -l | sed -e 's/[^0-9]//g') # osx have some extra spaces in the 'wc' output, take them away
 
     if [ ${#2} -ge $((${len}-${#headline})) -o ${linecount} -gt 1 ]; then
+	echoi "${headline}"
+
+	if [ ! -z ${load_part_stateinfo_maxlines} -a ${linecount} -ge ${load_part_stateinfo_maxlines} ]; then
+	    stty -echo
+	    if ! yesno --default yes --charcount 1 --nonewline $(echoi "   ...contains ${linecount} lines, display [Y/n]"); then
+		stty echo
+		return
+	    fi
+	    stty echo
+	fi
+
 	# Take away colors, convert tabs to spaces, wrap multilines by the screenlength - 12, and then add some spaces at the front of each line
 	str=$(echo "${2}" | sed -e "s:\x1B\[[0-9;]*[mK]::g" | expand | fold -s -w $((${len}-12)) | sed -e 's/^/   /g')
-	echoi "${headline}"
 	for l in ${str}; do
 	    echoi "  ${l}"
 	done
@@ -123,6 +143,20 @@ function svnInfo() {
     echoi "  Svn  status" "${svnstatout}"
 }
 
+function compressedInfo() {
+    local compressedOutput=""
+    case $1 in
+        *.tar.bz2|*.bz2)            compressedOutput=$(tar -tvjf ${1} 2> /dev/null)     ;;
+        *.tar.gz|*.gz|*.tgz|*.Z)    compressedOutput=$(tar -tvzf ${1} 2> /dev/null)     ;;
+        *.tar)                      compressedOutput=$(tar -tvf ${1} 2> /dev/null)      ;;
+        *.zip)                      compressedOutput=$(unzip -l ${1} 2> /dev/null)      ;;
+    esac
+
+    if [ ! -z "${compressedOutput}" ]; then
+	echoi "Archive content" "${compressedOutput}"
+    fi
+}
+
 function getFullPath() {
     curr_dir=$(pwd)
     if [[ $1 == /* ]]; then
@@ -143,7 +177,7 @@ function stateinfo_directory() {
     echoi "Info about directory ${folderpath}"
     cd "${folderpath}" &> /dev/null
     if [ $? != 0 ]; then
-	echoi " --- Unable to access that directory ---"
+	echoi " --- Unable to access directory ---"
 	return
     fi
     folderInfo
@@ -159,6 +193,7 @@ function stateinfo_file() {
     echoi "Guessed filetype" "$(file ${filepath})"
     echoi "Full stat output" "$(stat ${filepath})"
     echoi "Open references (lsof)" "$(lsof ${filepath} 2> /dev/null)"
+    compressedInfo ${filepath}
 }
 
 function stateinfo_general() {
