@@ -11,6 +11,27 @@ if [ ! -z ${editor} ]; then
   export GIT_EDITOR=${editor}
 fi
 
+if [ ! -z ${load_part_bash_hotkeys} ]; then
+    # meta+o will do: previous-line, start-of-line, forward a word, space
+    bind  '"\M-o": "\C-p\C-a\M-f "'
+
+    # Make page-up and page-down cycle history that maches
+    bind '"\e[5~": history-search-backward'
+    bind '"\e[6~": history-search-forward'
+
+    # Alt+arrow behavior
+    bind '"\e[1;9D": backward-word'
+    bind '"\e[1;9C": forward-word'
+    bind '"\e[1;9A": beginning-of-line'
+    bind '"\e[1;9B": end-of-line'
+fi
+
+if [ ! -z ${load_part_bash_tweek_hotkeys} ]; then
+    # Change the tab key to cycle trough completions, and shift-tab for reverse
+    bind 'TAB: menu-complete'
+    bind '"\e[Z": "\e-1\C-i"'
+fi
+
 #ulimit -S -c 0          # Don't want any coredumps.
 set -o notify           # Notify of job termination immediately.
 set -o noclobber        # If set, disallow existing regular files to be overwritten by redirection of output.
