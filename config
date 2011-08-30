@@ -15,10 +15,12 @@ esac
 ##
 # Misc settings
 ##
-editor='nano' # Your favorite editor, will be set in loader if set
+editor='nano' # Your favorite editor, will be set in 'loader' if set
+
+startup_debug=1 # Outputs information at the start of a new shell, FIXME, not implemented
 
 #load_global_bashrc=1		# Try to load /etc/bashrc
-load_global_bash_completion=1	# Try to load /etc/bash_completion or /opt/local/etc/bash_completion on osx (port install bash-completion)
+load_global_bash_completion=1	# Try to load /etc/bash_completion or /opt/local/etc/bash_completion on osx (port install bash-completion) (can delay startup of new shells by seconds!) But fast when the files are cached in memory
 
 #---------------------------------------------------------------------
 # Parts
