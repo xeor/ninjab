@@ -16,6 +16,8 @@ Features
   * [1_bash](https://github.com/xeor/bashrc/wiki/parts-1_bash)
   * [3_aliases](https://github.com/xeor/bashrc/wiki/parts-3_aliases)
   * [4_prompt](https://github.com/xeor/bashrc/wiki/parts-4_prompt)
+  * [5_stateinfo](https://github.com/xeor/bashrc/wiki/parts-5_stateinfo)
+  * [6_pipes](https://github.com/xeor/bashrc/wiki/parts-5_pipes)
 * Lots more, take a look inside the files in parts/
 
 
