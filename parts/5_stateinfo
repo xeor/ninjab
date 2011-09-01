@@ -244,3 +244,5 @@ if [ ! -z ${load_part_stateinfo_alias} ]; then
     eval $a
     unset a
 fi
+
+trap - 2
