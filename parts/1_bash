@@ -1,4 +1,9 @@
-[ -z ${load_part_bash} ] && return
+if [ ${load_part_bash} ]; then
+    [ ${startup_debug} ] && echo " loading"
+else
+    [ ${startup_debug} ] && echo " skipping"
+    return
+fi
 
 # Not really sure if everything here needs v3.x and above. little FIXME
 if [ "$bash_version" \< "3.0" ]; then
@@ -6,14 +11,17 @@ if [ "$bash_version" \< "3.0" ]; then
 fi
 
 if [ ! -z ${editor} ]; then
+    [ ${startup_debug} ] && echo "Exporting EDITOR, SVN_EDITOR and GIT_EDITOR to ${editor}"
   export EDITOR=${editor}
   export SVN_EDITOR=${editor}
   export GIT_EDITOR=${editor}
 fi
 
 if [ ! -z ${load_part_bash_hotkeys} ]; then
-    # meta+o will do: previous-line, start-of-line, forward a word, space
-    bind  '"\M-o": "\C-p\C-a\M-f "'
+    [ ${startup_debug} ] && echo "Loading extra keybindings"
+
+    # meta+o will do: previous-line, start-of-line, forward a word, space, FIXME, doesnt work...?
+    bind '"M-o": "\C-p\C-a\M-f "'
 
     # Make page-up and page-down cycle history that maches
     bind '"\e[5~": history-search-backward'
@@ -27,11 +35,14 @@ if [ ! -z ${load_part_bash_hotkeys} ]; then
 fi
 
 if [ ! -z ${load_part_bash_tweek_hotkeys} ]; then
+    [ ${startup_debug} ] && echo "Changing tab to cycle, and shift-tab to reverse cycle"
+
     # Change the tab key to cycle trough completions, and shift-tab for reverse
     bind 'TAB: menu-complete'
     bind '"\e[Z": "\e-1\C-i"'
 fi
 
+[ ${startup_debug} ] && echo "Setting misc bash options"
 #ulimit -S -c 0          # Don't want any coredumps.
 set -o notify           # Notify of job termination immediately.
 set -o noclobber        # If set, disallow existing regular files to be overwritten by redirection of output.
@@ -58,6 +69,7 @@ unset MAILCHECK         # Don't want the shell to warn me of incoming mail.
 # bash completion
 ##
 if [ ! -z ${load_part_bash_completions} ]; then
+    [ ${startup_debug} ] && echo -n "Loading several bash completions: "
     complete -A hostname   rsh rcp telnet rlogin r ftp ping disk ssh
     complete -A export     printenv
     complete -A variable   export local readonly unset
@@ -75,6 +87,7 @@ if [ ! -z ${load_part_bash_completions} ]; then
     complete -A directory   -o default cd
     
     # Compression
+    [ ${startup_debug} ] && echo -n "compression "
     complete -f -o default -X '*.+(zip|ZIP)'  zip
     complete -f -o default -X '!*.+(zip|ZIP)' unzip
     complete -f -o default -X '*.+(z|Z)'      compress
@@ -86,6 +99,7 @@ if [ ! -z ${load_part_bash_completions} ]; then
     complete -f -o default -X '!*.+(zip|ZIP|z|Z|gz|GZ|bz2|BZ2)' extract
 
     # Documents - Postscript,pdf,dvi.....
+    [ ${startup_debug} ] && echo -n "documents "
     complete -f -o default -X '!*.+(ps|PS)'  gs ghostview ps2pdf ps2ascii
     complete -f -o default -X '!*.+(dvi|DVI)' dvips dvipdf xdvi dviselect dvitype
     complete -f -o default -X '!*.+(pdf|PDF)' acroread pdf2ps
@@ -97,6 +111,7 @@ if [ ! -z ${load_part_bash_completions} ]; then
     complete -f -o default -X '!*.+(doc|DOC|xls|XLS|ppt|PPT|sx?|SX?|csv|CSV|od?|OD?|ott|OTT)' openoffice.org
     
     # Multimedia
+    [ ${startup_debug} ] && echo -n "multimedia "
     complete -f -o default -X '!*.+(gif|GIF|jp*g|JP*G|bmp|BMP|xpm|XPM|png|PNG)' xv gimp ee gqview
     complete -f -o default -X '!*.+(mp3|MP3)' mpg123 mpg321
     complete -f -o default -X '!*.+(ogg|OGG)' ogg123
@@ -104,9 +119,11 @@ if [ ! -z ${load_part_bash_completions} ]; then
     complete -f -o default -X '!*.@(mp?(e)g|MP?(E)G|wma|avi|AVI|asf|vob|VOB|bin|dat|vcd|ps|pes|fli|viv|rm|ram|yuv|mov|MOV|qt|QT|wmv|mp3|MP3|ogg|OGG|ogm|OGM|mp4|MP4|wav|WAV|asx|ASX)' vlc
     
     # Misc
+    [ ${startup_debug} ] && echo -n "programming "
     complete -f -o default -X '!*.+(py|PY|pyc|PYC)' python
     complete -f -o default -X '!*.+(php|PHP|php5|PHP5)' php
 
+    [ ${startup_debug} ] && echo "ssh "
     [ -f ~/.ssh/config -a ${load_part_bash_completions_sshHostUseConfig:-""} ] && complete -W '$(cat ~/.ssh/config | grep ^Host | cut -d " " -f 2)' ssh
 fi
 
@@ -118,12 +135,16 @@ export HOSTFILE=${HOME}/.hosts    # Put list of remote hosts in ~/.hosts ...
 # FIXME, unsure if any other OS should handle this the same way. LSCOLORS should not be overwritten if set..?
 case ${os} in
     Darwin)
+	[ ${startup_debug} ] && echo "Loading osx (Darwin) specific color settings"
+
 	export CLICOLOR=1
 	export LSCOLORS="ExGxFxdxCxDxDxhbadExEx"
 	;;
 esac
 
 if [ ! -z ${load_part_bash_history} ]; then
+    [ ${startup_debug} ] && echo "Bash history, date/time logging, ignore common, ignore dupes, size"
+
     export HISTTIMEFORMAT="%F %T > "
     [ -z ${load_part_bash_history_ignoreCommon} ] || export HISTIGNORE="&:[ ]*:bg:fg:ll:ls:ls -l:h:history:ps aux"
     export HISTCONTROL=ignoredups
@@ -134,6 +155,8 @@ fi
 if [ ! -z ${load_part_bash_misccolors} ]; then
     case ${os} in
 	Linux)
+	    [ ${startup_debug} ] && echo "Set colors in man pages (Linux)"
+
             export LESS_TERMCAP_mb=$'\E[01;31m' # begin blinking
 	    export LESS_TERMCAP_md=$'\E[01;38;5;74m' # begin bold
 	    export LESS_TERMCAP_me=$'\E[0m' # end mode
@@ -143,6 +166,7 @@ if [ ! -z ${load_part_bash_misccolors} ]; then
 	    export LESS_TERMCAP_us=$'\E[04;38;5;146m' # begin underline
 	    ;;
 	Darwin)
+	    [ ${startup_debug} ] && echo "Set colors in man pages osx (Darwin)"
 	    export LESS_TERMCAP_mb=$'\E[01;31m' # begin blinking
 	    export LESS_TERMCAP_md=$'\E[01;31m' # begin bold
 	    export LESS_TERMCAP_me=$'\E[0m' # end mode
@@ -158,6 +182,8 @@ fi
 
 # Less stuff
 if which less &> /dev/null ; then
+    [ ${startup_debug} ] && echo "Fixes less, more alias, utf-8, more info at status bar"
+
     alias more='less'
     export PAGER=less
     export LESSCHARSET='utf-8'

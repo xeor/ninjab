@@ -1,4 +1,10 @@
-[ -z ${load_part_stateinfo} ] && return
+if [ ${load_part_stateinfo} ]; then
+    [ ${startup_debug} ] && echo " loading"
+else
+    [ ${startup_debug} ] && echo " skipping"
+    return
+fi
+
 
 # Todo
 #  * SELinux info

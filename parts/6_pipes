@@ -1,4 +1,9 @@
-[ -z ${load_part_pipes} ] && return
+if [ ${load_part_pipes} ]; then
+    [ ${startup_debug} ] && echo " loading"
+else
+    [ ${startup_debug} ] && echo " skipping"
+    return
+fi
 
 # sed oneliners doesnt really need a while loop to work as it can just be echo $1 | sed ..
 

@@ -18,24 +18,31 @@ fi
 
 if [ ! -z $load_global_bashrc ]; then
     if [ -f /etc/bashrc ]; then
-        echo "Loading etc bashrc"
+	[ ${startup_debug} ] && echo -n "Loading global /etc/bashrc"
         . /etc/bashrc
+	[ ${startup_debug} ] && echo " - done"
     fi
 fi
 
 if [ ! -z $load_global_bash_completion ]; then
     if [ -f /etc/bash_completion ]; then
+	[ ${startup_debug} ] && echo -n "Loading global /etc/bash_completion"
         . /etc/bash_completion
+	[ ${startup_debug} ] && echo " - done"
     fi
 
     if [ -f /opt/local/etc/bash_completion ]; then
+	[ ${startup_debug} ] && echo -n "Loading global /opt/local/etc/bash_completion"
 	. /opt/local/etc/bash_completion
+	[ ${startup_debug} ] && echo " - done"
     fi
 fi
 
 for i in $mydir/parts/*; do
     # Load every file as long as they dont have a # ~ in the filename 
     if ! [[ $i =~ \#|~ ]]; then
+	[ ${startup_debug} ] && echo -en "\nPart ${i} -"
         . $i
+	[ ${startup_debug} ] && echo "End of part ${i}"
     fi
 done

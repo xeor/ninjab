@@ -1,4 +1,9 @@
-[ -z $load_part_prompt ] && return
+if [ ${load_part_prompt} ]; then
+    [ ${startup_debug} ] && echo " loading"
+else
+    [ ${startup_debug} ] && echo " skipping"
+    return
+fi
 
 #-------------------------------------------------------------
 # Bash prompt
