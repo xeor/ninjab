@@ -21,7 +21,7 @@ if [ ! -z ${load_part_bash_hotkeys} ]; then
     [ ${startup_debug} ] && echo "Loading extra keybindings"
 
     # meta+o will do: previous-line, start-of-line, forward a word, space, FIXME, doesnt work...?
-    bind '"M-o": "\C-p\C-a\M-f "'
+    #bind '"M-o": "\C-p\C-a\M-f "'
 
     # Make page-up and page-down cycle history that maches
     bind '"\e[5~": history-search-backward'
@@ -147,7 +147,7 @@ if [ ! -z ${load_part_bash_history} ]; then
 
     export HISTTIMEFORMAT="%F %T > "
     [ -z ${load_part_bash_history_ignoreCommon} ] || export HISTIGNORE="&:[ ]*:bg:fg:ll:ls:ls -l:h:history:ps aux"
-    export HISTCONTROL=ignoredups
+    export HISTCONTROL="ignoreboth" # Ignore duplicates and commands starting with a space
     export HISTFILESIZE=${load_part_bash_history_max:-2000}
 fi
 
