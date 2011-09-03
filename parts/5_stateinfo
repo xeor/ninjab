@@ -40,17 +40,17 @@ function __cleanup_interrupt() {
 }
 
 function filler() {
-    char=${1:-'*'}
-    count=${2:-$((${COLUMNS:-78}))}
+    local char=${1:-'*'}
+    local count=${2:-$((${COLUMNS:-78}))}
     printf -vch  "%${count}s" ""
     printf "%s\n" "${ch// /${char}}"
 }
 
 function echoi() {
-    headline="${1}: "
-    char='*'
+    local headline="${1}: "
+    local char='*'
 
-    len=${3:-$((${COLUMNS:-78}-1))}
+    local len=${3:-$((${COLUMNS:-78}-1))}
     local IFS=$(echo -en "\n\b") # Sets IFS to a newline
 
     if [ -z "${2}" ]; then
@@ -58,7 +58,7 @@ function echoi() {
 	return
     fi
 
-    linecount=$(echo -e "$2" | wc -l | sed -e 's/[^0-9]//g') # osx have some extra spaces in the 'wc' output, take them away
+    local linecount=$(echo -e "$2" | wc -l | sed -e 's/[^0-9]//g') # osx have some extra spaces in the 'wc' output, take them away
 
     if [ ${#2} -ge $((${len}-${#headline})) -o ${linecount} -gt 1 ]; then
 	echoi "${headline}"
@@ -73,7 +73,7 @@ function echoi() {
 	fi
 
 	# Take away colors, convert tabs to spaces, wrap multilines by the screenlength - 12, and then add some spaces at the front of each line
-	str=$(echo "${2}" | sed -e "s:\x1B\[[0-9;]*[mK]::g" | expand | fold -s -w $((${len}-12)) | sed -e 's/^/   /g')
+	local str=$(echo "${2}" | sed -e "s:\x1B\[[0-9;]*[mK]::g" | expand | fold -s -w $((${len}-12)) | sed -e 's/^/   /g')
 	for l in ${str}; do
 	    echoi "  ${l}"
 	done
@@ -83,9 +83,9 @@ function echoi() {
 }
 
 function getOSinfo() {
-    os_version_file=$(find /etc -maxdepth 1 -type f -name '*_version' -o -name '*_release' -o -name '*-version' -o -name '*-release' 2> /dev/null | head -n 1)
+    local os_version_file=$(find /etc -maxdepth 1 -type f -name '*_version' -o -name '*_release' -o -name '*-version' -o -name '*-release' 2> /dev/null | head -n 1)
     if [ ! -z ${os_version_file} ]; then
-	os_version=$(cat ${os_version_file})
+	local os_version=$(cat ${os_version_file})
 	echo "OS: ${os_version}, from ${os_version_file}"
     else
 	echo "OS: No /etc/[_,-][release,version] found"
@@ -164,16 +164,16 @@ function compressedInfo() {
 }
 
 function getFullPath() {
-    curr_dir=$(pwd)
+    local curr_dir=$(pwd)
     if [[ $1 == /* ]]; then
-	dir=$(dirname $1)
+	local dir=$(dirname $1)
     else
-	dir="${curr_dir}/$(dirname $1)"
+	local dir="${curr_dir}/$(dirname $1)"
     fi
 
-    fname=$(basename $1)
+    local fname=$(basename $1)
     cd $dir
-    full_path="$(pwd)/$fname"
+    local full_path="$(pwd)/$fname"
     cd $curr_dir
     echo $full_path
 }
