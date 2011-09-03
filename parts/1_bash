@@ -10,11 +10,16 @@ if [ "$bash_version" \< "3.0" ]; then
     return
 fi
 
+if [ -d ~/bin ] ; then
+    [ ${startup_debug} ] && echo "Adding ~/bin to the start of PATH"
+    PATH=~/bin:"${PATH}"
+fi
+
 if [ ! -z ${editor} ]; then
     [ ${startup_debug} ] && echo "Exporting EDITOR, SVN_EDITOR and GIT_EDITOR to ${editor}"
-  export EDITOR=${editor}
-  export SVN_EDITOR=${editor}
-  export GIT_EDITOR=${editor}
+    export EDITOR=${editor}
+    export SVN_EDITOR=${editor}
+    export GIT_EDITOR=${editor}
 fi
 
 if [ ! -z ${load_part_bash_hotkeys} ]; then
