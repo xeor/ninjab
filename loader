@@ -1,16 +1,9 @@
 #!/bin/bash
 
 # Exit if running non-interacive
-[ -z "$PS1" ] && return
-
-# Make sure :)
-case $- in
-    *i*)    # interactive shell
-	;;
-    *)      # non-interactive shell
-	return
-	;;
-esac
+if [[ $- != *i* ]] || [ -z "$PS1" ]; then
+    return
+fi
 
 mydir=$(cd $(dirname ${BASH_SOURCE:-$0});pwd)
 os=$(uname -s)
