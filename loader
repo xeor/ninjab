@@ -11,7 +11,7 @@ bash_version=${BASH_VERSION%.*}
 . ${mydir}/config
 
 if [ -f /etc/bashrc_ask -o -f ~/.bashrc_ask  ]; then
-    if ! yesno --charcount 1 --default yes "${bashrc_ask_q:-"Do you want to load a more usefull bashrc?"} [Yn]"; then
+    if ! yesno --charcount 1 --default yes "${bashrc_ask_text:-"Do you want to load a more usefull bashrc?"} [Yn]"; then
 	return
     fi
 fi

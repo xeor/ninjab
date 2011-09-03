@@ -24,7 +24,7 @@ load_global_bash_completion=1	# Try to load /etc/bash_completion or /opt/local/e
 
 # If you want to be asked to load this bashrc. Create a file in /etc/bashrc_ask or ~/.bashrc_ask
 # and fill out this optional question (will be "do you want to load a more usefull bashrc?" as default)
-#bashrc_ask_q="Are you sure you want to load a custom bashrc?"
+#bashrc_ask_text="Are you sure you want to load a custom bashrc?"
 
 #---------------------------------------------------------------------
 # Parts
