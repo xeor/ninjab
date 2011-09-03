@@ -3,6 +3,15 @@
 # Exit if running non-interacive
 [ -z "$PS1" ] && return
 
+# Make sure :)
+case $- in
+    *i*)    # interactive shell
+	;;
+    *)      # non-interactive shell
+	return
+	;;
+esac
+
 mydir=$(cd $(dirname ${BASH_SOURCE:-$0});pwd)
 os=$(uname -s)
 bash_version=${BASH_VERSION%.*}
