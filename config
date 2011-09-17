@@ -42,7 +42,6 @@ load_global_bash_completion=1	# Try to load /etc/bash_completion or /opt/local/e
 ########################################
 load_part_bash=1
 load_part_bash_completions=1
-load_part_bash_completions_genhostfile=1 # Generate $HOSTFILE (usually ~/.hosts) for use by eg ping ftp ssh.. FIXME, handle generation...
 load_part_bash_completions_sshHostUseConfig=1 # Try to use ~/.ssh/config to complete ssh completion instead of hostfile
 load_part_bash_misccolors=1 # Enable colors on example man pages.
 #
