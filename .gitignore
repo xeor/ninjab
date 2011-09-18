@@ -2,3 +2,4 @@
 *~
 parts/*_personal
 parts/*_local
+build/rpm/RPMS/*
