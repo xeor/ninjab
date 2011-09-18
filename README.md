@@ -27,10 +27,17 @@ Known issues
 
 Installation
 ------------
-
 If you want easy updates, and maybe want to contribute at some point. Use this method.
 
 1. `git clone git://github.com/xeor/bashrc.git bashrc`: Clone the repository to wherever you want
-2. `nano bashrc/config`: Edit the configuration file.
+2. `cd bashrc && cp config config.local && nano bashrc/config.local`: Create your own local config file and edit it.
 3. `echo '. /home/username/bashrc/loader' >> /home/username/.profile`: Make sure the loader is started with a new shell
 4. Try to start a new shell
+
+Configuration
+-------------
+bashrc looks for configuration in 3 different places, in this order.
+
+* `config` in its own directory first. Dont edit this file, it might get things added in future versions.
+* `/etc/ninjab.conf` for global configuration.
+* `config.local` in its own directory. If you want any local changes use this. It wont be touched by updates.

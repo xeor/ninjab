@@ -10,7 +10,16 @@ os=$(uname -s)
 bash_version=${BASH_VERSION%.*}
 
 . ${mydir}/functions
+
 . ${mydir}/config
+
+if [ -f /etc/ninjab.conf ]; then
+  . /etc/ninjab.conf
+fi
+
+if [ -f ${mydir}/config.local ]; then
+  . ${mydir}/config.local
+fi
 
 if [ -f /etc/bashrc_ask -o -f ~/.bashrc_ask  ]; then
     if ! yesno --charcount 1 --default yes "${bashrc_ask_text:-"Do you want to load a more usefull bashrc?"} [Yn]"; then
