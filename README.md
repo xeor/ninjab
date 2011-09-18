@@ -1,4 +1,4 @@
-bashrc
+ninjab
 ======
 
 Features
@@ -13,11 +13,11 @@ Features
 * Aliases which tries to save you time and give you more info as default.
 * Creates some usefull hotkeys
 * Different parts
-  * [1_bash](https://github.com/xeor/bashrc/wiki/parts-1_bash)
-  * [3_aliases](https://github.com/xeor/bashrc/wiki/parts-3_aliases)
-  * [4_prompt](https://github.com/xeor/bashrc/wiki/parts-4_prompt)
-  * [5_stateinfo](https://github.com/xeor/bashrc/wiki/parts-5_stateinfo)
-  * [6_pipes](https://github.com/xeor/bashrc/wiki/parts-5_pipes)
+  * [1_bash](https://github.com/xeor/ninjab/wiki/parts-1_bash)
+  * [3_aliases](https://github.com/xeor/ninjab/wiki/parts-3_aliases)
+  * [4_prompt](https://github.com/xeor/ninjab/wiki/parts-4_prompt)
+  * [5_stateinfo](https://github.com/xeor/ninjab/wiki/parts-5_stateinfo)
+  * [6_pipes](https://github.com/xeor/ninjab/wiki/parts-5_pipes)
 * Lots more, take a look inside the files in parts/
 
 
@@ -30,13 +30,13 @@ Installation
 If you want easy updates, and maybe want to contribute at some point. Use this method.
 
 ### Using git
-1. `git clone git://github.com/xeor/bashrc.git bashrc`: Clone the repository to wherever you want
-2. `cp bashrc/config ~/.ninjab.conf && nano ~/.ninjab.conf`: Create your own local config file and edit it.
-3. `echo '. /home/username/bashrc/loader' >> ~/.profile`: Make sure the loader is started with a new shell
+1. `git clone git://github.com/xeor/ninjab.git ninjab`: Clone the repository to wherever you want
+2. `cp ninjab/config ~/.ninjab.conf && nano ~/.ninjab.conf`: Create your own local config file and edit it.
+3. `echo '. /home/username/ninjab/loader' >> ~/.profile`: Make sure the loader is started with a new shell
 4. Try to start a new shell
 
 ### Using RPM
-1. `wget https://github.com/downloads/xeor/bashrc/ninjab-latest.noarch.rpm`
+1. `wget https://github.com/downloads/xeor/ninjab/ninjab-latest.noarch.rpm`
 2. `rpm -ivh ninjab-latest.noarch.rpm`
 3. `cp /usr/share/ninjab/config ~/.ninjab.conf && nano ~/.ninjab.conf`: Create your own local config file and edit it.
 4. `echo '. /usr/share/ninjab/loader' >> ~/.profile`: Make sure the loader is started with a new shell
@@ -44,7 +44,7 @@ If you want easy updates, and maybe want to contribute at some point. Use this m
 
 Configuration
 -------------
-bashrc looks for configuration in 4 different places, in this order.
+ninjab looks for configuration in 4 different places, in this order.
 
 * `config` in its own directory first. Dont edit this file, it might get things added in future versions.
 * `/etc/ninjab.conf` for global configuration.

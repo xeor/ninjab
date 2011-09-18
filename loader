@@ -25,8 +25,8 @@ if [ -f ~/.ninjab.conf ]; then
   . ~/.ninjab.conf
 fi
 
-if [ -f /etc/bashrc_ask -o -f ~/.bashrc_ask  ]; then
-    if ! yesno --charcount 1 --default yes "${bashrc_ask_text:-"Do you want to load a more usefull bashrc?"} [Yn]"; then
+if [ -f /etc/ninjab_ask -o -f ~/.ninjab_ask  ]; then
+    if ! yesno --charcount 1 --default yes "${ninjab_ask_text:-"Do you want to load more usefull bash configurations?"} [Yn]"; then
 	return
     fi
 fi

@@ -4,7 +4,7 @@ Version: %(grep "^##" CHANGELOG.md | head -n 1 | awk {'print $2'})
 Release: 1
 License: GPL
 Group: System Tools
-URL: https://github.com/xeor/bashrc
+URL: https://github.com/xeor/ninjab
 Packager: Lars Solberg <lars.solberg@gmail.com>
 buildarch: noarch
 
