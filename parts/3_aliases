@@ -52,8 +52,7 @@ fi
 
 # lazy cd ..
 if [ ! -z ${load_part_aliases_ls_shortcuts} ]; then
-    [ ${startup_debug} ] && echo ". aliases, for .=pwd, ..=cd .., ...=cd ../.. and so on"
-    alias .='pwd'
+    [ ${startup_debug} ] && echo ". aliases, for ..=cd .., ...=cd ../.. and so on"
     alias ..='cd ..'
     alias ...='cd ../..'
     alias ....='cd ../../..'
