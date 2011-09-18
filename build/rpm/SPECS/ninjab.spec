@@ -13,8 +13,7 @@ Ninjab Is Not Just Another Bashrc
 
 %build
 cd %git_dir
-install -o root -g root -m 0755 -d %{buildroot}/etc
-install -o root -g root -m 0755 config %{buildroot}/etc/ninjab.conf
+install -o root -g root -m 0755 config %{buildroot}/usr/share/ninjab/config
 install -o root -g root -m 0755 -d %{buildroot}/usr/share/ninjab
 install -o root -g root -m 0755 functions %{buildroot}/usr/share/ninjab/
 install -o root -g root -m 0755 loader %{buildroot}/usr/share/ninjab/
@@ -26,8 +25,8 @@ rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)
-/etc/ninjab.conf
 /usr/share/ninjab
+/usr/share/ninjab/config
 /usr/share/ninjab/functions
 /usr/share/ninjab/loader
 /usr/share/ninjab/parts/*
