@@ -65,7 +65,7 @@ function echoi() {
 
 	if [ ! -z ${load_part_stateinfo_maxlines} -a ${linecount} -ge ${load_part_stateinfo_maxlines} ]; then
 	    stty -echo
-	    if ! yesno --default yes --charcount 1 --nonewline $(echoi "   ...contains ${linecount} lines, display [Y/n]"); then
+	    if ! int_ninjab_yesno --default yes --charcount 1 --nonewline $(echoi "   ...contains ${linecount} lines, display [Y/n]"); then
 		stty echo
 		return
 	    fi

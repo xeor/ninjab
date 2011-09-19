@@ -2,16 +2,29 @@
 
 #####################################################################
 # Global functions in here. Will always be loaded
+# Be careful about possible name collisions here!
 #####################################################################
 
+# Global ninjab helper
+function ninjab() {
+    case $1 in
+	reload)
+	    echo "Reloading ninjab"
+	    . "${mydir}/loader"
+	    ;;
+	*)
+	    echo "help"
+	    ;;
+    esac
+}
 
 # Print warning message.
-function warning() {
+function int_ninjab_warning() {
     echo "$*" >&2
 }
 
 # Print error message and exit.
-function error() {
+function int_ninjab_error() {
     echo "$*" >&2
     #exit 1
 }
@@ -19,7 +32,7 @@ function error() {
 # Ask yesno question. (taken from http://www.linuxjournal.com/content/asking-yesno-question-bash-script)
 # Minor changes by Lars Solberg
 #
-# Usage: yesno OPTIONS QUESTION
+# Usage: int_ninjab_yesno OPTIONS QUESTION
 #
 #   Options:
 #     --timeout N    Timeout if no input seen in N seconds.
@@ -27,7 +40,7 @@ function error() {
 #                    if an empty answer is provided.
 #
 # Exit status is the answer.
-function yesno() {
+function int_ninjab_yesno() {
     local ans
     local ok=0
     local timeout=0
@@ -40,11 +53,11 @@ function yesno() {
             --default)
 		shift
 		default=$1
-		if [[ ! "$default" ]]; then error "Missing default value"; fi
+		if [[ ! "$default" ]]; then int_ninjab_error "Missing default value"; fi
 		t=$(tr '[:upper:]' '[:lower:]' <<<$default)
 
 		if [[ "$t" != 'y'  &&  "$t" != 'yes'  &&  "$t" != 'n'  &&  "$t" != 'no' ]]; then
-                    error "Illegal default answer: $default"
+                    int_ninjab_error "Illegal default answer: $default"
 		fi
 		default=$t
 		shift
@@ -53,8 +66,8 @@ function yesno() {
             --timeout)
 		shift
 		timeout=$1
-		if [[ ! "$timeout" ]]; then error "Missing timeout value"; fi
-		if [[ ! "$timeout" =~ ^[0-9][0-9]*$ ]]; then error "Illegal timeout value: $timeout"; fi
+		if [[ ! "$timeout" ]]; then int_ninjab_error "Missing timeout value"; fi
+		if [[ ! "$timeout" =~ ^[0-9][0-9]*$ ]]; then int_ninjab_error "Illegal timeout value: $timeout"; fi
 		shift
 		;;
 
@@ -70,7 +83,7 @@ function yesno() {
 		;;
 
             -*)
-		error "Unrecognized option: $1"
+		int_ninjab_error "Unrecognized option: $1"
 		break
 		;;
 
@@ -81,7 +94,7 @@ function yesno() {
     done
 
     if [[ $timeout -ne 0  &&  ! "$default" ]]; then
-        error "Non-zero timeout requires a default answer"
+        int_ninjab_error "Non-zero timeout requires a default answer"
     fi
 
     while [[ $ok -eq 0 ]]; do
@@ -122,13 +135,13 @@ function yesno() {
 
 	# We want to ask the user with our own text
         #if [[ $ok -eq 0 ]]; then
-	#    warning "Valid answers are: yes y no n"
+	#    int_ninjab_warning "Valid answers are: yes y no n"
 	#fi
     done
     [[ "$ans" = "y" || "$ans" == "yes" ]]
 }
 
-function set_color() {
+function int_ninjab_set_color() {
     # Thanks from https://github.com/wayneeseguin/rvm/blob/master/scripts/color
     case "$1" in
         # regular colors
