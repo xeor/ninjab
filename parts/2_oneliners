@@ -1,7 +1,7 @@
 if [ ${load_part_oneliners} ]; then
-    [ ${startup_debug} ] && echo " loading"
+    [ ${startup_debug} ] && echo " loading" ||:
 else
-    [ ${startup_debug} ] && echo " skipping"
+    [ ${startup_debug} ] && echo " skipping" ||:
     return
 fi
 
