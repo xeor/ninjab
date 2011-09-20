@@ -1,7 +1,7 @@
 if [ ${load_part_aliases} ]; then
-    [ ${startup_debug} ] && echo " loading"
+    [ ${startup_debug} ] && echo " loading" ||:
 else
-    [ ${startup_debug} ] && echo " skipping"
+    [ ${startup_debug} ] && echo " skipping" ||:
     return
 fi
 
@@ -19,7 +19,7 @@ fi
 case ${OS} in
      Darwin)
 	if [ ! -z ${load_part_aliases_same} ]; then
-	    [ ${startup_debug} ] && echo "Turn on verbosity for chmod/chown (adding -vv)"
+	    [ ${startup_debug} ] && echo "Turn on verbosity for chmod/chown (adding -vv)" ||:
             alias chmod='chmod -vv'
             alias chown='chown -vv'
 
@@ -30,12 +30,12 @@ case ${OS} in
 
      Linux)
 	if [ ! -z ${load_part_aliases_same} ]; then
-	    [ ${startup_debug} ] && echo "Turn on verbosity for chmod/chown (adding -c)"
+	    [ ${startup_debug} ] && echo "Turn on verbosity for chmod/chown (adding -c)" ||:
             alias chmod='chmod -c'
             alias chown='chown -c'
 
             # Makes them fill the screen by default
-	    [ ${startup_debug} ] && echo "Making head/tail fill the screen height as default"
+	    [ ${startup_debug} ] && echo "Making head/tail fill the screen height as default" ||:
             alias head='head -n $(($LINES-2))'
             alias tail='tail -n $(($LINES-2))'
 	fi
@@ -44,7 +44,7 @@ esac
 
 # Prevents accidentally clobbering files, and be verbose.
 if [ ! -z ${load_part_aliases_same} ]; then
-    [ ${startup_debug} ] && echo "Prevent accidentally clobbering files rm/cp/mv (adding -v -i)"
+    [ ${startup_debug} ] && echo "Prevent accidentally clobbering files rm/cp/mv (adding -v -i)" ||:
     alias rm='rm -v -i'
     alias cp='cp -v -i'
     alias mv='mv -v -i'
@@ -52,7 +52,7 @@ fi
 
 # lazy cd ..
 if [ ! -z ${load_part_aliases_ls_shortcuts} ]; then
-    [ ${startup_debug} ] && echo ". aliases, for ..=cd .., ...=cd ../.. and so on"
+    [ ${startup_debug} ] && echo ". aliases, for ..=cd .., ...=cd ../.. and so on" ||:
     alias ..='cd ..'
     alias ...='cd ../..'
     alias ....='cd ../../..'
@@ -70,7 +70,7 @@ alias cd-source='cd `pwd -P`' # Goto the "real" path of the directory you are in
 
 # One letters
 if [ ! -z ${load_part_aliases_oneletters} ]; then
-    [ ${startup_debug} ] && echo "One letter aliases, j=jobs -l, c=clear, l=ll, p=ps aux, n=nano"
+    [ ${startup_debug} ] && echo "One letter aliases, j=jobs -l, c=clear, l=ll, p=ps aux, n=nano" ||:
     alias j='jobs -l'
     alias c='clear' # Quick clear
     alias l='ll'
@@ -85,19 +85,19 @@ alias proc-unpause='killall -CONT '
 if [ ! -z ${load_part_aliases_ls} ]; then
     case ${os} in
 	Darwin)
-	    [ ${startup_debug} ] && echo "ll will also display osx attributes"
+	    [ ${startup_debug} ] && echo "ll will also display osx attributes" ||:
 	    [ ! -z ${load_part_aliases_same} ] && alias ls='ls -hF'
 	    alias ll='ls -lO' # View osx attributes too
 	    ;;
 	Linux)
-	    [ ${startup_debug} ] && echo "Add colors for filetypes, ll groups directories first, lx sorts by extension"
+	    [ ${startup_debug} ] && echo "Add colors for filetypes, ll groups directories first, lx sorts by extension" ||:
 	    [ ! -z ${load_part_aliases_same} ] && alias ls='ls -hF --color'  # add colors for filetype recognition
 	    alias ll='ls -l --group-directories-first'
 	    alias lx='ls -lXB'         # sort by extension
 	    ;;
     esac
 
-    [ ${startup_debug} ] && echo "ls aliases, la, lk, lc, lu, lt, lm, lr"
+    [ ${startup_debug} ] && echo "ls aliases, la, lk, lc, lu, lt, lm, lr" ||:
     alias la='ls -Al'          # show hidden files
     alias lk='ls -lSr'         # sort by size, biggest last
     alias lc='ls -ltcr'        # sort by and show change time, most recent last
