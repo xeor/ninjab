@@ -46,7 +46,8 @@ Configuration
 -------------
 ninjab looks for configuration in 4 different places, in this order.
 
-* `config` in its own directory first. Dont edit this file, it might get things added in future versions.
+* `config` in its own directory first. Don't edit this file, may be options added in future versions.
 * `/etc/ninjab.conf` for global configuration.
 * `config.local` in its own directory. If you want any local changes use this. It wont be touched by updates.
 * `~/.ninjab.conf` in your home directory.
+
