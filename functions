@@ -5,39 +5,6 @@
 # Be careful about possible name collisions here!
 #####################################################################
 
-# Global ninjab helper
-function ninjab() {
-    case $1 in
-	help)
-	    if [ ${2} ]; then
-		if [ -f "${mydir}/parts/${2}" ]; then
-		    echo "Help text about ${2}:"
-		    cat "${mydir}/parts/${2}" | \
-			awk 'BEGIN {x=0}; { if ($0~"## Help ##") {x=1}; if (x==1) { print $0 }; if ($0~"## End Help ##") {x=0} }' | \
-			grep -v '^##' | \
-			sed 's/^#/  /g'
-		else
-		    echo "Unable to find a module with that name"
-		fi
-	    else
-		echo "Ninjab Is Not Just Another Bashrc.."
-		echo
-		echo "Comes in different parts, here is a list of the currently"
-		echo "loaded parts. Type eg 'ninjab help 4_prompt' to get more"
-		echo "info/help on that specific part."
-		echo
-		for p in ${int_ninjab_available_parts}; do
-		    echo "Part $p"
-		done
-		echo
-	    fi
-	    ;;
-	*)
-	    echo "Loading/Reloading ninjab, type 'ninjab help' for help"
-	    . "${mydir}/loader"	    
-	    ;;
-    esac
-}
 
 # Print warning message.
 function int_ninjab_warning() {
@@ -162,7 +129,7 @@ function int_ninjab_yesno() {
     [[ "$ans" = "y" || "$ans" == "yes" ]]
 }
 
-function int_ninjab_set_color() {
+function set_color() {
     # Thanks from https://github.com/wayneeseguin/rvm/blob/master/scripts/color
     case "$1" in
         # regular colors
@@ -210,5 +177,43 @@ function int_ninjab_set_color() {
 	bdefault) tput setab 9 ;;
 	none) tput sgr0 ;;
 	*) tput sgr0 # Reset
+    esac
+}
+
+
+# Global ninjab helper
+function ninjab() {
+    case $1 in
+	help)
+	    if [ ${2} ]; then
+		if [ -f "${mydir}/parts/${2}" ]; then
+		    if declare -f int_ninjab_help_${2} &> /dev/null; then
+			echo -e "Help text about ${2}:\n"
+			int_ninjab_help_${2}
+		    else
+			if int_ninjab_yesno "${2} didnt contain any help, do you want to manually inspect the source? [y/n]"; then
+			    less "${mydir}/parts/${2}"
+			fi
+		    fi
+		else
+		    echo "Unable to find a module with that name"
+		fi
+	    else
+		echo "Ninjab Is Not Just Another Bashrc.."
+		echo
+		echo "Comes in different parts, here is a list of the currently"
+		echo "loaded parts. Type eg 'ninjab help 4_prompt' to get more"
+		echo "info/help on that specific part."
+		echo
+		for p in ${int_ninjab_available_parts}; do
+		    echo "Part $p"
+		done
+		echo
+	    fi
+	    ;;
+	*)
+	    echo "Loading/Reloading ninjab, type 'ninjab help' for help"
+	    . "${mydir}/loader"	    
+	    ;;
     esac
 }
