@@ -5,6 +5,8 @@ else
     return
 fi
 
+int_ninjab_available_parts="$int_ninjab_available_parts 1_bash"
+
 # Not really sure if everything here needs v3.x and above. little FIXME
 if [ "$bash_version" \< "3.0" ]; then
     return

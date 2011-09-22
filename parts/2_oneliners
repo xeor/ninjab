@@ -7,6 +7,8 @@ fi
 
 # Usefull oneliners...
 
+int_ninjab_available_parts="$int_ninjab_available_parts 2_oneliners"
+
 mkcd() { mkdir -p $@; cd $_; }
 
 # Make a folder with the date as prefix: mkdate suffix # (makes 100421_suffix), if no suffix, _temp is set

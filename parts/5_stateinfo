@@ -5,6 +5,7 @@ else
     return
 fi
 
+int_ninjab_available_parts="$int_ninjab_available_parts 5_stateinfo"
 
 # Todo
 #  * SELinux info
