@@ -130,17 +130,9 @@ function promptcmd () {
     PS1=""
 
     # System type and category
-    # FIXME, is static on reload
-    # FIXME, isnt loaded at start of prompt
-    if [ -z "${system_type}" ]; then
-	if [ -z "${system_category}" ]; then
-	    [ -f /etc/sysinfo ] && source /etc/sysinfo
-	    [ -f ~/.sysinfo ] && source ~/.sysinfo
-	fi
-    else
-	if [ "${system_type}" == "ignore" ]; then
-	    unset system_type
-	fi
+    if [ ! -z "${system_info_check}" ]; then
+	[ -f /etc/sysinfo ] && source /etc/sysinfo
+	[ -f ~/.sysinfo ] && source ~/.sysinfo
     fi
     case ${system_type} in
 	"crit"|"critical")

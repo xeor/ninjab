@@ -78,9 +78,12 @@ load_part_aliases_same=1 # To get common enhancements for some commands, like rm
 load_part_prompt=1
 #load_part_prompt_notifyDaychange=1
 #
-# Set static info at the beginning of the bash prompt. Can also be defined in /etc/sysinfo or ~/.sysinfo
-# system_type makes the color, crit is red, prod is yellow and test is green. "ignore" will makes it skip sysinfo file checks
-system_type="ignore" # crit|prod|test or ignore
+# Set static info at the beginning of the bash prompt. Can also be defined in /etc/sysinfo or ~/.sysinfo if system_info_check is defined,
+# or you can define them here
+#system_info_check=1
+
+# system_type makes the color, crit is red, prod is yellow and test is green.
+#system_type="crit" # crit|prod|test or ignore
 #
 # This is static text at the beginning of the prompt. Will have the color defined above if any.
 # Can also be defined in /etc/sysinfo or ~/.sysinfo
