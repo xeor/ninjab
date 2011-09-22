@@ -1,3 +1,9 @@
+## 0.3.1
+
+* Global 'ninjab' command for controlling ninjab.
+* Bug fixes
+
+
 ## 0.3 (2011-09-18)
 
 * First initial version, started at v0.3 because its the "3rd" personal
