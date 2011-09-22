@@ -29,6 +29,7 @@ int_ninjab_available_parts="$int_ninjab_available_parts 4_prompt"
 #  - $ or # depending on the uid
 #  - Added SUDO_PS1, to fix bug#1
 #  - Support for system type and system category
+#  - Changed the way colors work, and added some colorfull help
 #
 # Tested
 #  - OK on OSX 10.6.7 with bash 3.2.48
