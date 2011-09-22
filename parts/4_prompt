@@ -33,25 +33,6 @@ int_ninjab_available_parts="$int_ninjab_available_parts 4_prompt"
 # Tested
 #  - OK on OSX 10.6.7 with bash 3.2.48
 
-# Configure Colors (before help):
-COLOR_WHITE='\033[1;37m'
-COLOR_LIGHTGRAY='033[0;37m'
-COLOR_GRAY='\033[1;30m'
-COLOR_BLACK='\033[0;30m'
-COLOR_RED='\033[0;31m'
-COLOR_LIGHTRED='\033[1;31m'
-COLOR_GREEN='\033[0;32m'
-COLOR_LIGHTGREEN='\033[1;32m'
-COLOR_BROWN='\033[0;33m'
-COLOR_YELLOW='\033[1;33m'
-COLOR_BLUE='\033[0;34m'
-COLOR_LIGHTBLUE='\033[1;34m'
-COLOR_PURPLE='\033[0;35m'
-COLOR_PINK='\033[1;35m'
-COLOR_CYAN='\033[0;36m'
-COLOR_LIGHTCYAN='\033[1;36m'
-COLOR_DEFAULT='\033[0m'
-
 function int_ninjab_help_4_prompt() {
 cat <<EOF
    Current Format: [(SYSTEM TYPE)] USER@HOST [dynamic section] { CURRENT DIRECTORY }$"
@@ -258,6 +239,8 @@ function promptcmd () {
           PS1="${PS1}$(set_color yellow)[scr:${DTCHSCRN}]$(set_color) "
       fi
     fi
+
+    # FIXME: tmux sessions
 
     # Backgrounded running jobs
     local BKGJBS=$(jobs -r | wc -l | sed -e 's/[^0-9]//g' )
