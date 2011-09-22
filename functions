@@ -8,12 +8,33 @@
 # Global ninjab helper
 function ninjab() {
     case $1 in
-	reload)
-	    echo "Reloading ninjab"
-	    . "${mydir}/loader"
+	help)
+	    if [ ${2} ]; then
+		if [ -f "${mydir}/parts/${2}" ]; then
+		    echo "Help text about ${2}:"
+		    cat "${mydir}/parts/${2}" | \
+			awk 'BEGIN {x=0}; { if ($0~"## Help ##") {x=1}; if (x==1) { print $0 }; if ($0~"## End Help ##") {x=0} }' | \
+			grep -v '^##' | \
+			sed 's/^#/  /g'
+		else
+		    echo "Unable to find a module with that name"
+		fi
+	    else
+		echo "Ninjab Is Not Just Another Bashrc.."
+		echo
+		echo "Comes in different parts, here is a list of the currently"
+		echo "loaded parts. Type eg 'ninjab help 4_prompt' to get more"
+		echo "info/help on that specific part."
+		echo
+		for p in ${int_ninjab_available_parts}; do
+		    echo "Part $p"
+		done
+		echo
+	    fi
 	    ;;
 	*)
-	    echo "help"
+	    echo "Loading/Reloading ninjab, type 'ninjab help' for help"
+	    . "${mydir}/loader"	    
 	    ;;
     esac
 }
