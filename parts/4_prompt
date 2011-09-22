@@ -38,49 +38,49 @@ function int_ninjab_help_4_prompt() {
 cat <<EOF
    Current Format: [(SYSTEM TYPE)] USER@HOST [dynamic section] { CURRENT DIRECTORY }$"
    SYSTEM TYPE: (Will only be visible if sysinfo is defined.
-     \[$(set_color red)\]Red\[$(set_color)\]          == Critical system
-     \[$(set_color yellow)\]Yellow\[$(set_color)\]       == Production system
-     \[$(set_color green)\]Green\[$(set_color)\]        == Test system
+     $(set_color red)Red$(set_color)          == Critical system
+     $(set_color yellow)Yellow$(set_color)       == Production system
+     $(set_color green)Green$(set_color)        == Test system
    USER:      (also sets the base color for the prompt)
-     \[$(set_color red)\]Red\[$(set_color)\]          == Root(UID 0) Login shell (i.e. sudo bash)
-     \[$(set_color ered)\]Light Red\[$(set_color)\]    == Root(UID 0) Login shell (i.e. su -l or direct login)
-     \[$(set_color yellow)\]Yellow\[$(set_color)\]       == Root(UID 0) priviledges in non-login shell (i.e. su)
-     \[$(set_color eyellow)\]Light Yellow\[$(set_color)\] == SU to user other than root(UID 0)
-     \[$(set_color green)\]Green\[$(set_color)\]        == Normal user
+     $(set_color red)Red$(set_color)          == Root(UID 0) Login shell (i.e. sudo bash)
+     $(set_color ered)Light Red$(set_color)    == Root(UID 0) Login shell (i.e. su -l or direct login)
+     $(set_color yellow)Yellow$(set_color)       == Root(UID 0) priviledges in non-login shell (i.e. su)
+     $(set_color eyellow)Light Yellow$(set_color) == SU to user other than root(UID 0)
+     $(set_color green)Green$(set_color)        == Normal user
    @:
-     \[$(set_color ered)\]Light Red\[$(set_color)\]    == http_proxy environmental variable undefined.
-     \[$(set_color green)\]Green\[$(set_color)\]        == http_proxy environmental variable configured.
+     $(set_color ered)Light Red$(set_color)    == http_proxy environmental variable undefined.
+     $(set_color green)Green$(set_color)        == http_proxy environmental variable configured.
    HOST:
-     \[$(set_color red)\]Red\[$(set_color)\]          == Insecure remote connection (unknown type)
-     \[$(set_color yellow)\]Yellow\[$(set_color)\]       == Insecure remote connection (Telnet)
-     \[$(set_color eyellow)\]Light Yellow\[$(set_color)\] == Insecure remote connection (RSH)
-     \[$(set_color cyan)\]Cyan\[$(set_color)\]         == Secure remote connection (i.e. SSH)
-     \[$(set_color green)\]Green\[$(set_color)\]        == Local session
+     $(set_color red)Red$(set_color)          == Insecure remote connection (unknown type)
+     $(set_color yellow)Yellow$(set_color)       == Insecure remote connection (Telnet)
+     $(set_color eyellow)Light Yellow$(set_color) == Insecure remote connection (RSH)
+     $(set_color cyan)Cyan$(set_color)         == Secure remote connection (i.e. SSH)
+     $(set_color green)Green$(set_color)        == Local session
    GLOBAL VARIABLSE INFORMATION:
-     \[$(set_color ecyan)\][venv:NAME]\[$(set_color)\]  == Name of the virtual envirnoment you are currently using if using
+     $(set_color ecyan)[venv:NAME]$(set_color)  == Name of the virtual envirnoment you are currently using if using
                       python virtual_env
    CURRENT DIR INFORMATION:
-     \[$(set_color magenta)\][svn:#:#]\[$(set_color)\]    == Display version of current svn directory
+     $(set_color magenta)[svn:#:#]$(set_color)    == Display version of current svn directory
                   Will contain * at end if you got local modification
                   If two numbers, 1st is last updated version, 2nd is your version
                   If one number, your version is the last checked out
-     \[$(set_color magenta)\][git:r#]\[$(set_color)\]     == Display version of current git directory
+     $(set_color magenta)[git:r#]$(set_color)     == Display version of current git directory
                   Will contain * at end if you got local modification
    DYNAMIC SECTION:
        (If count is zero for any of the following, it will not appear)
-     \[$(set_color red)\][es:#]\[$(set_color)\]       == Exit code of last command run
+     $(set_color red)[es:#]$(set_color)       == Exit code of last command run
      [scr:#] ==== Number of detached screen sessions
-       \[$(set_color yellow)\]Yellow\[$(set_color)\]     == 1-2
-       \[$(set_color red)\]Red\[$(set_color)\]        == 3+
+       $(set_color yellow)Yellow$(set_color)     == 1-2
+       $(set_color red)Red$(set_color)        == 3+
      [bg:#]  ==== Number of backgrounded but still running jobs
-       \[$(set_color yellow)\]Yellow\[$(set_color)\]     == 1-10
-       \[$(set_color red)\]Red\[$(set_color)\]        == 11+
+       $(set_color yellow)Yellow$(set_color)     == 1-10
+       $(set_color red)Red$(set_color)        == 11+
      [stp:#] ==== Number of stopped (backgrounded) jobs
-       \[$(set_color yellow)\]Yellow\[$(set_color)\]     == 1-2
-       \[$(set_color red)\]Red\[$(set_color)\]        == 3+
+       $(set_color yellow)Yellow$(set_color)     == 1-2
+       $(set_color red)Red$(set_color)        == 3+
    CURRENT DIRECTORY:     (truncated to 1/3 screen width)
-     \[$(set_color red)\]Red\[$(set_color)\]          == Current user does not have write priviledges
-     \[$(set_color green)\]Green\[$(set_color)\]        == Current user does have write priviledges
+     $(set_color red)Red$(set_color)          == Current user does not have write priviledges
+     $(set_color green)Green$(set_color)        == Current user does have write priviledges
    NOTE:
      1.  Displays message on day change at midnight on the line above the
          prompt (Day changed to...).
