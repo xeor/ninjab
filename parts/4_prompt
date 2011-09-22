@@ -130,6 +130,8 @@ function promptcmd () {
     PS1=""
 
     # System type and category
+    # FIXME, is static on reload
+    # FIXME, isnt loaded at start of prompt
     if [ -z "${system_type}" ]; then
 	if [ -z "${system_category}" ]; then
 	    [ -f /etc/sysinfo ] && source /etc/sysinfo
@@ -179,7 +181,7 @@ function promptcmd () {
             if [[ ${SUDO_USER} ]]; then
                 PS1="${PS1}$(set_color red)\u$(set_color)"
             else
-                PS1="${PS1}$(set_color green)\u$(set_color)"
+                PS1="${PS1}$(set_color ered)\u$(set_color)"
             fi
         else
             PS1="${PS1}$(set_color yellow)\u$(set_color)"
@@ -282,6 +284,7 @@ function promptcmd () {
     fi
 
     # Bracket {
+    # FIXME; duplicate code with #user
     if [ ${UID} -eq 0 ]; then
         if [ "${USER}" == "${LOGNAME}" ]; then
             if [[ ${SUDO_USER} ]]; then
@@ -309,6 +312,7 @@ function promptcmd () {
     fi
 
     # Closing bracket } and $\#
+    # FIXME: duplicate code with user
     if [ ${UID} -eq 0 ]; then
         user_mark="$(set_color red)#"
         if [ "${USER}" == "${LOGNAME}" ]; then
