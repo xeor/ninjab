@@ -9,6 +9,7 @@ mydir=$(cd $(dirname ${BASH_SOURCE:-$0});pwd)
 os=$(uname -s)
 bash_version=${BASH_VERSION%.*}
 
+int_ninjab_available_parts=''
 . ${mydir}/functions
 
 . ${mydir}/config
