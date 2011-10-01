@@ -1,6 +1,8 @@
 ## 0.3.1
 
 * Global 'ninjab' command for controlling ninjab.
+* Support for osx brew installed bash_completion
+* parts-prompt - Better git status when not in any default branch. Eg, when you are viewing remote branches, tags, and so on..
 * Bug fixes
 
 
