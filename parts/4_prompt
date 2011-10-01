@@ -319,7 +319,7 @@ function promptcmd() {
 }
 
 # Trim working dir to 1/3 the screen width
-function prompt_workingdir () {
+function prompt_workingdir() {
   local pwdmaxlen=$(($COLUMNS))
   let pwdmaxlen=$pwdmaxlen/3
   local trunc_symbol="..."
@@ -342,7 +342,7 @@ function prompt_workingdir () {
 #     xemacs.
 # 3   Display promptcmd for all other cases.
 
-function load_prompt () {
+function load_prompt() {
     # Get PIDs
     local parent_process=$(ps -p $PPID -o comm | tail -n 1)
     local my_process=$(ps -p $$ -o comm | tail -n 1)
