@@ -89,8 +89,14 @@ cat <<EOF
 EOF
 }
 
+function int_prompt_get_color() {
+    # TODO: Work in progress, not done
+    # Better handeling of colors in the prompt. Will be faster because it assigns variables of color type at the beginning, can be used for theming as well
+    echo
+}
+
 # Function to set prompt_command to.
-function promptcmd () {
+function promptcmd() {
     history -a
 
     local SSH_FLAG=0
