@@ -89,6 +89,8 @@ load_part_prompt=1
 # Can also be defined in /etc/sysinfo or ~/.sysinfo
 #system_category="webserver"
 
+# Show runtime of last command if it took more than X seconds, comment out to disable
+load_part_prompt_slowcommandwarn=10
 
 ########################################
 # parts/5_stateinfo

@@ -30,6 +30,7 @@ int_ninjab_available_parts="$int_ninjab_available_parts 4_prompt"
 #  - Added SUDO_PS1, to fix bug#1
 #  - Support for system type and system category
 #  - Changed the way colors work, and added some colorfull help
+#  - Added timer for last command
 #
 # Tested
 #  - OK on OSX 10.6.7 with bash 3.2.48
@@ -69,15 +70,16 @@ cat <<EOF
    DYNAMIC SECTION:
        (If count is zero for any of the following, it will not appear)
      $(set_color red)[es:#]$(set_color)       == Exit code of last command run
-     [scr:#] ==== Number of detached screen sessions
+     [scr:#]     ==== Number of detached screen sessions
        $(set_color yellow)Yellow$(set_color)     == 1-2
        $(set_color red)Red$(set_color)        == 3+
-     [bg:#]  ==== Number of backgrounded but still running jobs
+     [bg:#]      ==== Number of backgrounded but still running jobs
        $(set_color yellow)Yellow$(set_color)     == 1-10
        $(set_color red)Red$(set_color)        == 11+
-     [stp:#] ==== Number of stopped (backgrounded) jobs
+     [stp:#]     ==== Number of stopped (backgrounded) jobs
        $(set_color yellow)Yellow$(set_color)     == 1-2
        $(set_color red)Red$(set_color)        == 3+
+     $(set_color yellow)[cmdtime:#]$(set_color) ==== Number of seconds the previous command took
    CURRENT DIRECTORY:     (truncated to 1/3 screen width)
      $(set_color red)Red$(set_color)          == Current user does not have write priviledges
      $(set_color green)Green$(set_color)        == Current user does have write priviledges
@@ -98,7 +100,6 @@ function int_prompt_get_color() {
 # Function to set prompt_command to.
 function promptcmd() {
     history -a
-
     local SSH_FLAG=0
     local TTY=$(tty | awk -F/dev/ '{print $2}')
     if [[ ${TTY} ]]; then
@@ -265,6 +266,18 @@ function promptcmd() {
         PS1="${PS1}\[$(set_color yellow)\][stp:${STPJBS}]\[$(set_color)\] "
     fi
 
+    # Time of last command
+    if [ ${load_part_prompt_slowcommandwarn} ]; then
+	_NJB_NOWTIME=$(date +%s)
+	_NJB_ENABLETIMER=yes
+	if [ ${_NJB_PREVTIME} ]; then
+	    local TOTTIME=$((${_NJB_NOWTIME} - ${_NJB_PREVTIME}))
+	    if [ ${TOTTIME} -gt ${load_part_prompt_slowcommandwarn} ]; then
+		PS1="${PS1}\[$(set_color yellow)\][cmdtime:${TOTTIME}]\[$(set_color)\] "
+	    fi
+	fi
+    fi
+
     # Bracket {
     # FIXME; duplicate code with #user
     if [ ${UID} -eq 0 ]; then
@@ -346,6 +359,12 @@ function load_prompt() {
     # Get PIDs
     local parent_process=$(ps -p $PPID -o comm | tail -n 1)
     local my_process=$(ps -p $$ -o comm | tail -n 1)
+
+    # Trap DEBUG to be able to set a timer
+    if [ ${load_part_prompt_slowcommandwarn} ]; then
+	echo 11
+	trap 'if [ "x${_NJB_ENABLETIMER}" == "xyes" ]; then _NJB_PREVTIME=$(date +%s); _NJB_ENABLETIMER=no; fi' DEBUG
+    fi
 
     if  [[ $parent_process == script* ]]; then
         PROMPT_COMMAND=""
