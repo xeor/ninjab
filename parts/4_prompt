@@ -31,6 +31,7 @@ int_ninjab_available_parts="$int_ninjab_available_parts 4_prompt"
 #  - Support for system type and system category
 #  - Changed the way colors work, and added some colorfull help
 #  - Added timer for last command
+#  - Added tmux session counter, just like screen.
 #
 # Tested
 #  - OK on OSX 10.6.7 with bash 3.2.48
@@ -71,6 +72,9 @@ cat <<EOF
        (If count is zero for any of the following, it will not appear)
      $(set_color red)[es:#]$(set_color)       == Exit code of last command run
      [scr:#]     ==== Number of detached screen sessions
+       $(set_color yellow)Yellow$(set_color)     == 1-2
+       $(set_color red)Red$(set_color)        == 3+
+     [tmux:#]    ==== Number of tmux sessions
        $(set_color yellow)Yellow$(set_color)     == 1-2
        $(set_color red)Red$(set_color)        == 3+
      [bg:#]      ==== Number of backgrounded but still running jobs
@@ -240,7 +244,7 @@ function promptcmd() {
 
     # Detached Screen Sessions
     if which screen &> /dev/null; then
-      local DTCHSCRN=$(screen -ls | grep -c Detach )
+      DTCHSCRN=$(screen -ls | grep -c Detach)
       if [ ${DTCHSCRN} -gt 2 ]; then
           PS1="${PS1}\[$(set_color red)\][scr:${DTCHSCRN}]\[$(set_color)\] "
       elif [ ${DTCHSCRN} -gt 0 ]; then
@@ -248,7 +252,15 @@ function promptcmd() {
       fi
     fi
 
-    # FIXME: tmux sessions
+    # tmux sessions
+    if which tmux &> /dev/null; then
+	local DTCHTMUX=$(tmux ls 2> /dev/null | wc -l | sed -e 's/[^0-9]//g')
+	if [ ${DTCHTMUX} -gt 2 ]; then
+            PS1="${PS1}\[$(set_color red)\][tmux:${DTCHTMUX}]\[$(set_color)\] "
+	elif [ ${DTCHTMUX} -gt 0 ]; then
+            PS1="${PS1}\[$(set_color yellow)\][tmux:${DTCHTMUX}]\[$(set_color)\] "
+	fi
+    fi
 
     # Backgrounded running jobs
     local BKGJBS=$(jobs -r | wc -l | sed -e 's/[^0-9]//g' )
@@ -362,7 +374,6 @@ function load_prompt() {
 
     # Trap DEBUG to be able to set a timer
     if [ ${load_part_prompt_slowcommandwarn} ]; then
-	echo 11
 	trap 'if [ "x${_NJB_ENABLETIMER}" == "xyes" ]; then _NJB_PREVTIME=$(date +%s); _NJB_ENABLETIMER=no; fi' DEBUG
     fi
 
