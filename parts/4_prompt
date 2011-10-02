@@ -101,6 +101,18 @@ function int_prompt_get_color() {
     echo
 }
 
+function int_prompt_hms() {
+    local ts=${1}
+    local h=$((${ts} / 3600)); [[ $h -eq 0 ]] && h='' || h="${h}h"
+    local m=$((${ts} % 3600 / 60)); [[ $m -eq 0 ]] && m='' || m="${m}m"
+    local s=$((${ts} % 60)); [[ $s -eq 0 ]] && s='' || s="${s}s"
+
+    local tArray=(${h} ${m} ${s})
+    local out=$(printf ",%s" "${tArray[@]}")
+    echo ${out:1}
+}
+
+
 # Function to set prompt_command to.
 function promptcmd() {
     history -a
@@ -285,6 +297,7 @@ function promptcmd() {
 	if [ ${_NJB_PREVTIME} ]; then
 	    local TOTTIME=$((${_NJB_NOWTIME} - ${_NJB_PREVTIME}))
 	    if [ ${TOTTIME} -gt ${load_part_prompt_slowcommandwarn} ]; then
+		local TOTTIME=$(int_prompt_hms ${TOTTIME})
 		PS1="${PS1}\[$(set_color yellow)\][cmdtime:${TOTTIME}]\[$(set_color)\] "
 	    fi
 	fi
