@@ -7,6 +7,8 @@ fi
 
 # sed oneliners doesnt really need a while loop to work as it can just be echo $1 | sed ..
 
+int_ninjab_available_parts="$int_ninjab_available_parts 6_pipes"
+
 function rem-colors() {
     while read s; do echo "${s}" | sed -e "s:\x1B\[[0-9;]*[mK]::g"; done
 }

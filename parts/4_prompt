@@ -5,6 +5,8 @@ else
     return
 fi
 
+int_ninjab_available_parts="$int_ninjab_available_parts 4_prompt"
+
 #-------------------------------------------------------------
 # Bash prompt
 #-------------------------------------------------------------
@@ -27,80 +29,93 @@ fi
 #  - $ or # depending on the uid
 #  - Added SUDO_PS1, to fix bug#1
 #  - Support for system type and system category
+#  - Changed the way colors work, and added some colorfull help
+#  - Added timer for last command
+#  - Added tmux session counter, just like screen.
 #
 # Tested
 #  - OK on OSX 10.6.7 with bash 3.2.48
-#
-# Current Format: USER@HOST [dynamic section] { CURRENT DIRECTORY }$
-# USER:      (also sets the base color for the prompt)
-#   Red       == Root(UID 0) Login shell (i.e. sudo bash)
-#   Light Red == Root(UID 0) Login shell (i.e. su -l or direct login)
-#   Yellow    == Root(UID 0) priviledges in non-login shell (i.e. su)
-#   Brown     == SU to user other than root(UID 0)
-#   Green     == Normal user
-# @:
-#   Light Red == http_proxy environmental variable undefined.
-#   Green     == http_proxy environmental variable configured.
-# HOST:
-#   Red       == Insecure remote connection (unknown type)
-#   Yellow    == Insecure remote connection (Telnet)
-#   Brown     == Insecure remote connection (RSH)
-#   Cyan      == Secure remote connection (i.e. SSH)
-#   Green     == Local session
-# GLOBAL VARIABLSE INFORMATION:
-#   [venv:NAME] ==== Name of the virtual envirnoment you are currently using if using
-#                    python virtual_env
-# CURRENT DIR INFORMATION:
-#   [svn:#:#] ==== Display version of current svn directory
-#                Will contain * at end if you got local modification
-#                If two numbers, 1st is last updated version, 2nd is your version
-#                If one number, your version is the last checked out
-#   [git:r#] ==== Display version of current git directory
-#                Will contain * at end if you got local modification
-# DYNAMIC SECTION:
-#     (If count is zero for any of the following, it will not appear)
-#   [es:#]  ==== Exit code of last command run
-#   [scr:#] ==== Number of detached screen sessions
-#     Yellow    == 1-2
-#     Red       == 3+
-#   [bg:#]  ==== Number of backgrounded but still running jobs
-#     Yellow    == 1-10
-#     Red       == 11+
-#   [stp:#] ==== Number of stopped (backgrounded) jobs
-#     Yellow    == 1-2
-#     Red       == 3+
-# CURRENT DIRECTORY:     (truncated to 1/3 screen width)
-#   Red       == Current user does not have write priviledges
-#   Green     == Current user does have write priviledges
-# NOTE:
-#   1.  Displays message on day change at midnight on the line above the
-#       prompt (Day changed to...).
-#   2.  Command is added to the history file each time you hit enter so its
-#       available to newly spawned shells
 
-# Configure Colors:
-COLOR_WHITE='\033[1;37m'
-COLOR_LIGHTGRAY='033[0;37m'
-COLOR_GRAY='\033[1;30m'
-COLOR_BLACK='\033[0;30m'
-COLOR_RED='\033[0;31m'
-COLOR_LIGHTRED='\033[1;31m'
-COLOR_GREEN='\033[0;32m'
-COLOR_LIGHTGREEN='\033[1;32m'
-COLOR_BROWN='\033[0;33m'
-COLOR_YELLOW='\033[1;33m'
-COLOR_BLUE='\033[0;34m'
-COLOR_LIGHTBLUE='\033[1;34m'
-COLOR_PURPLE='\033[0;35m'
-COLOR_PINK='\033[1;35m'
-COLOR_CYAN='\033[0;36m'
-COLOR_LIGHTCYAN='\033[1;36m'
-COLOR_DEFAULT='\033[0m'
+function int_ninjab_help_4_prompt() {
+cat <<EOF
+   Current Format: [(SYSTEM TYPE)] USER@HOST [dynamic section] { CURRENT DIRECTORY }$"
+   SYSTEM TYPE: (Will only be visible if sysinfo is defined.
+     $(set_color red)Red$(set_color)          == Critical system
+     $(set_color yellow)Yellow$(set_color)       == Production system
+     $(set_color green)Green$(set_color)        == Test system
+   USER:      (also sets the base color for the prompt)
+     $(set_color red)Red$(set_color)          == Root(UID 0) Login shell (i.e. sudo bash)
+     $(set_color ered)Light Red$(set_color)    == Root(UID 0) Login shell (i.e. su -l or direct login)
+     $(set_color yellow)Yellow$(set_color)       == Root(UID 0) priviledges in non-login shell (i.e. su)
+     $(set_color eyellow)Light Yellow$(set_color) == SU to user other than root(UID 0)
+     $(set_color green)Green$(set_color)        == Normal user
+   @:
+     $(set_color ered)Light Red$(set_color)    == http_proxy environmental variable undefined.
+     $(set_color green)Green$(set_color)        == http_proxy environmental variable configured.
+   HOST:
+     $(set_color red)Red$(set_color)          == Insecure remote connection (unknown type)
+     $(set_color yellow)Yellow$(set_color)       == Insecure remote connection (Telnet)
+     $(set_color eyellow)Light Yellow$(set_color) == Insecure remote connection (RSH)
+     $(set_color cyan)Cyan$(set_color)         == Secure remote connection (i.e. SSH)
+     $(set_color green)Green$(set_color)        == Local session
+   GLOBAL VARIABLE INFORMATION:
+     $(set_color ecyan)[venv:NAME]$(set_color)  == Name of the virtual envirnoment you are currently using if using
+                      python virtual_env
+   CURRENT DIR INFORMATION:
+     $(set_color magenta)[svn:#:#]$(set_color)    == Display version of current svn directory
+                  Will contain * at end if you got local modification
+                  If two numbers, 1st is last updated version, 2nd is your version
+                  If one number, your version is the last checked out
+     $(set_color magenta)[git:#]$(set_color)      == Display version of current git directory
+                  Will contain * at end if you got local modification
+   DYNAMIC SECTION:
+       (If count is zero for any of the following, it will not appear)
+     $(set_color red)[es:#]$(set_color)       == Exit code of last command run
+     [scr:#]     ==== Number of detached screen sessions
+       $(set_color yellow)Yellow$(set_color)     == 1-2
+       $(set_color red)Red$(set_color)        == 3+
+     [tmux:#]    ==== Number of tmux sessions
+       $(set_color yellow)Yellow$(set_color)     == 1-2
+       $(set_color red)Red$(set_color)        == 3+
+     [bg:#]      ==== Number of backgrounded but still running jobs
+       $(set_color yellow)Yellow$(set_color)     == 1-10
+       $(set_color red)Red$(set_color)        == 11+
+     [stp:#]     ==== Number of stopped (backgrounded) jobs
+       $(set_color yellow)Yellow$(set_color)     == 1-2
+       $(set_color red)Red$(set_color)        == 3+
+     $(set_color yellow)[cmdtime:#]$(set_color) ==== Number of seconds the previous command took
+   CURRENT DIRECTORY:     (truncated to 1/3 screen width)
+     $(set_color red)Red$(set_color)          == Current user does not have write priviledges
+     $(set_color green)Green$(set_color)        == Current user does have write priviledges
+   NOTE:
+     1.  Displays message on day change at midnight on the line above the
+         prompt (Day changed to...).
+     2.  Command is added to the history file each time you hit enter so its
+         available to newly spawned shells
+EOF
+}
+
+function int_prompt_get_color() {
+    # TODO: Work in progress, not done
+    # Better handeling of colors in the prompt. Will be faster because it assigns variables of color type at the beginning, can be used for theming as well
+    echo
+}
+
+function int_prompt_hms() {
+    local ts=${1}
+    local h=$((${ts} / 3600)); [[ $h -eq 0 ]] && h='' || h="${h}h"
+    local m=$((${ts} % 3600 / 60)); [[ $m -eq 0 ]] && m='' || m="${m}m"
+    local s=$((${ts} % 60)); [[ $s -eq 0 ]] && s='' || s="${s}s"
+
+    local tArray=(${h} ${m} ${s})
+    local out=$(printf ",%s" "${tArray[@]}")
+    echo ${out:1}
+}
+
 
 # Function to set prompt_command to.
-function promptcmd () {
+function promptcmd() {
     history -a
-
     local SSH_FLAG=0
     local TTY=$(tty | awk -F/dev/ '{print $2}')
     if [[ ${TTY} ]]; then
@@ -120,25 +135,19 @@ function promptcmd () {
     PS1=""
 
     # System type and category
-    if [ -z "${system_type}" ]; then
-	if [ -z "${system_category}" ]; then
-	    [ -f /etc/sysinfo ] && source /etc/sysinfo
-	    [ -f ~/.sysinfo ] && source ~/.sysinfo
-	fi
-    else
-	if [ "${system_type}" == "ignore" ]; then
-	    unset system_type
-	fi
+    if [ ! -z "${system_info_check}" ]; then
+	[ -f /etc/sysinfo ] && source /etc/sysinfo
+	[ -f ~/.sysinfo ] && source ~/.sysinfo
     fi
     case ${system_type} in
 	"crit"|"critical")
-	    local system_type_color="\[${COLOR_RED}\]"
+	    local system_type_color="\[$(set_color red)\]"
 	    ;;
 	"prod")
-	    local system_type_color="\[${COLOR_YELLOW}\]"
+	    local system_type_color="\[$(set_color yellow)\]"
 	    ;;
 	"test")
-	    local system_type_color="\[${COLOR_GREEN}\]"
+	    local system_type_color="\[$(set_color green)\]"
 	    ;;
     esac
     if [ -z "${system_category}" ]; then
@@ -146,7 +155,7 @@ function promptcmd () {
 	    local system_category="${system_type}"
 	fi
     fi
-    [ -z "${system_category}" ] || PS1="${PS1}${system_type_color:-""}(${system_category}) "
+    [ -z "${system_category}" ] || PS1="${PS1}${system_type_color:-""}(${system_category})\[$(set_color)\] "
 
     PS1="${PS1}${TITLEBAR}"
 
@@ -157,7 +166,7 @@ function promptcmd () {
 	else
             local today=$(date +%A)
             if [ "${DAY}" != "${today}" ]; then
-		PS1="${PS1}\n\[${COLOR_GREEN}\]Day changed to $(date '+%A, %d %B %Y').\n"
+		PS1="${PS1}\n\[$(set_color green)\]Day changed to $(date '+%A, %d %B %Y').\[$(set_color)\]\n"
 		export DAY=$today
 	    fi
 	fi
@@ -167,26 +176,26 @@ function promptcmd () {
     if [ ${UID} -eq 0 ] ; then
         if [ "${USER}" == "${LOGNAME}" ]; then
             if [[ ${SUDO_USER} ]]; then
-                PS1="${PS1}\[${COLOR_RED}\]\u"
+                PS1="${PS1}\[$(set_color red)\]\u\[$(set_color)\]"
             else
-                PS1="${PS1}\[${COLOR_LIGHTRED}\]\u"
+                PS1="${PS1}\[$(set_color ered)\]\u\[$(set_color)\]"
             fi
         else
-            PS1="${PS1}\[${COLOR_YELLOW}\]\u"
+            PS1="${PS1}\[$(set_color yellow)\]\u\[$(set_color)\]"
         fi
     else
         if [ ${USER} == ${LOGNAME} ]; then
-            PS1="${PS1}\[${COLOR_GREEN}\]\u"
+            PS1="${PS1}\[$(set_color green)\]\u\[$(set_color)\]"
         else
-            PS1="${PS1}\[${COLOR_BROWN}\]\u"
+            PS1="${PS1}\[$(set_color eyellow)\]\u\[$(set_color)\]"
         fi
     fi
 
     # HTTP Proxy var configured or not
     if [ -n "$http_proxy" ] ; then
-        PS1="${PS1}\[${COLOR_GREEN}\]@"
+        PS1="${PS1}\[$(set_color green)\]@\[$(set_color)\]"
     else
-        PS1="${PS1}\[${COLOR_LIGHTRED}\]@"
+        PS1="${PS1}\[$(set_color ered)\]@\[$(set_color)\]"
     fi
 
     # Host
@@ -194,30 +203,30 @@ function promptcmd () {
         SSH_FLAG=1
     fi
     if [ ${SSH_FLAG} -eq 1 ]; then
-       PS1="${PS1}\[${COLOR_CYAN}\]\h "
+       PS1="${PS1}\[$(set_color cyan)\h\[$(set_color)\] "
     elif [[ -n ${SESS_SRC} ]]; then
         if [ "${SESS_SRC}" == "(:0.0)" ]; then
-           PS1="${PS1}\[${COLOR_GREEN}\]\h "
+           PS1="${PS1}\[$(set_color green)\]\h\[$(set_color)\] "
         else
             local parent_process=$(ps -p $PPID -o comm | tail -n 1)
             if [[ "$parent_process" == "in.rlogind*" ]]; then
-                PS1="${PS1}\[${COLOR_BROWN}\]\h "
+                PS1="${PS1}\[$(set_color eyellow)\]\h\[$(set_color)\] "
             elif [[ "$parent_process" == "in.telnetd*" ]]; then
-                PS1="${PS1}\[${COLOR_YELLOW}\]\h "
+                PS1="${PS1}\[$(set_color yellow)\]\h\[$(set_color)\] "
             else
-                PS1="${PS1}\[${COLOR_LIGHTRED}\]\h "
+                PS1="${PS1}\[$(set_color ered)\]\h\[$(set_color)\] "
             fi
         fi
     elif [[ "${SESS_SRC}" == "" ]]; then
-        PS1="${PS1}\[${COLOR_GREEN}\]\h "
+        PS1="${PS1}\[$(set_color green)\]\h\[$(set_color)\] "
     else
-        PS1="${PS1}\[${COLOR_RED}\]\h "
+        PS1="${PS1}\[$(set_color red)\]\h\[$(set_color)\] "
     fi
 
     # Check for python virtualenv
     if [[ $VIRTUAL_ENV ]]; then
       VIRTNAME=$(basename $VIRTUAL_ENV)
-      PS1="${PS1}\[${COLOR_LIGHTCYAN}\][venv:${VIRTNAME}] "
+      PS1="${PS1}\[$(set_color ecyan)[venv:${VIRTNAME}]\[$(set_color)\] "
     fi
 
     # SVN status if .svn exist
@@ -226,7 +235,7 @@ function promptcmd () {
 	    local DIRTY REV=$(svnversion . 2>/dev/null)
 	    [ "$REV" ] || REV='?'
 	    [ "$(svn st &> /dev/null)" ] && DIRTY='*'
-            PS1="${PS1}\[${COLOR_PURPLE}\][svn:${REV}${DIRTY}] "
+            PS1="${PS1}\[$(set_color magenta)\][svn:${REV}${DIRTY}]\[$(set_color)\] "
 	fi
     fi
 
@@ -236,94 +245,119 @@ function promptcmd () {
 	STATUS=$(git status 2>/dev/null)
 	if [ $? -ne 128 ]; then
 	    [[ "$STATUS" == *'working directory clean'* ]] || DIRTY='*'
-	    GITSTATUS="($(git branch 2>/dev/null | sed -e '/^[^*]/d' -e 's/* //')$DIRTY)"
-            PS1="${PS1}\[${COLOR_PURPLE}\][git:${GITSTATUS}] "
+	    GITSTATUS="($(git describe --all --always 2> /dev/null | sed 's/^heads\///' 2>/dev/null)$DIRTY)"
+            PS1="${PS1}\[$(set_color magenta)\][git:${GITSTATUS}]\[$(set_color)\] "
 	fi
     fi
 
     # Exit status of the last command run. Must run the command itself from the PS1, so we must pass on this part
 
-    PS1="${PS1}\`let exitstatus=\$? ; if [[ \${exitstatus} != 0 ]] ; then echo -ne \"\[${COLOR_RED}\][es:\${exitstatus}] \" ; fi\`"
+    PS1="${PS1}\`let exitstatus=\$? ; if [[ \${exitstatus} != 0 ]] ; then echo -ne \"\\[$(set_color red)\][es:\${exitstatus}]\\[$(set_color)\] \" ; fi\`"
 
     # Detached Screen Sessions
     if which screen &> /dev/null; then
-      local DTCHSCRN=$(screen -ls | grep -c Detach )
+      DTCHSCRN=$(screen -ls | grep -c Detach)
       if [ ${DTCHSCRN} -gt 2 ]; then
-          PS1="${PS1}\[${COLOR_RED}\][scr:${DTCHSCRN}] "
+          PS1="${PS1}\[$(set_color red)\][scr:${DTCHSCRN}]\[$(set_color)\] "
       elif [ ${DTCHSCRN} -gt 0 ]; then
-          PS1="${PS1}\[${COLOR_YELLOW}\][scr:${DTCHSCRN}] "
+          PS1="${PS1}\[$(set_color yellow)\][scr:${DTCHSCRN}]\[$(set_color)\] "
       fi
+    fi
+
+    # tmux sessions
+    if which tmux &> /dev/null; then
+	local DTCHTMUX=$(tmux ls 2> /dev/null | wc -l | sed -e 's/[^0-9]//g')
+	if [ ${DTCHTMUX} -gt 2 ]; then
+            PS1="${PS1}\[$(set_color red)\][tmux:${DTCHTMUX}]\[$(set_color)\] "
+	elif [ ${DTCHTMUX} -gt 0 ]; then
+            PS1="${PS1}\[$(set_color yellow)\][tmux:${DTCHTMUX}]\[$(set_color)\] "
+	fi
     fi
 
     # Backgrounded running jobs
     local BKGJBS=$(jobs -r | wc -l | sed -e 's/[^0-9]//g' )
     if [ ${BKGJBS} -gt 2 ]; then
-        PS1="${PS1}\[${COLOR_RED}\][bg:${BKGJBS}] "
+        PS1="${PS1}\[$(set_color red)\][bg:${BKGJBS}]\[$(set_color)\] "
     elif [ ${BKGJBS} -gt 0 ]; then
-        PS1="${PS1}\[${COLOR_YELLOW}\][bg:${BKGJBS}] "
+        PS1="${PS1}\[$(set_color yellow)\][bg:${BKGJBS}]\[$(set_color)\] "
     fi
 
     # Stopped Jobs
     local STPJBS=$(jobs -s | wc -l | sed -e 's/[^0-9]//g' )
     if [ ${STPJBS} -gt 2 ]; then
-        PS1="${PS1}\[${COLOR_RED}\][stp:${STPJBS}] "
+        PS1="${PS1}\[$(set_color red)\][stp:${STPJBS}]\[$(set_color)\] "
     elif [ ${STPJBS} -gt 0 ]; then
-        PS1="${PS1}\[${COLOR_YELLOW}\][stp:${STPJBS}] "
+        PS1="${PS1}\[$(set_color yellow)\][stp:${STPJBS}]\[$(set_color)\] "
+    fi
+
+    # Time of last command
+    if [ ${load_part_prompt_slowcommandwarn} ]; then
+	_NJB_NOWTIME=$(date +%s)
+	_NJB_ENABLETIMER=yes
+	if [ ${_NJB_PREVTIME} ]; then
+	    local TOTTIME=$((${_NJB_NOWTIME} - ${_NJB_PREVTIME}))
+	    if [ ${TOTTIME} -gt ${load_part_prompt_slowcommandwarn} ]; then
+		local TOTTIME=$(int_prompt_hms ${TOTTIME})
+		PS1="${PS1}\[$(set_color yellow)\][cmdtime:${TOTTIME}]\[$(set_color)\] "
+	    fi
+	fi
     fi
 
     # Bracket {
+    # FIXME; duplicate code with #user
     if [ ${UID} -eq 0 ]; then
         if [ "${USER}" == "${LOGNAME}" ]; then
             if [[ ${SUDO_USER} ]]; then
-                PS1="${PS1}\[${COLOR_RED}\]"
+                PS1="${PS1}\[$(set_color red)\]"
             else
-                PS1="${PS1}\[${COLOR_LIGHTRED}\]"
+                PS1="${PS1}\[$(set_color ered)\]"
             fi
         else
-            PS1="${PS1}\[${COLOR_YELLOW}\]"
+            PS1="${PS1}\[$(set_color yellow)\]"
         fi
     else
         if [ "${USER}" == "${LOGNAME}" ]; then
-            PS1="${PS1}\[${COLOR_GREEN}\]"
+            PS1="${PS1}\[$(set_color green)\]"
         else
-            PS1="${PS1}\[${COLOR_BROWN}\]"
+            PS1="${PS1}\[$(set_color eyellow)\]"
         fi
     fi
     PS1="${PS1}{ "
 
     # Working directory
     if [ -w "${PWD}" ]; then
-        PS1="${PS1}\[${COLOR_GREEN}\]$(prompt_workingdir)"
+        PS1="${PS1}\[$(set_color green)\]$(prompt_workingdir)"
     else
-        PS1="${PS1}\[${COLOR_RED}\]$(prompt_workingdir)"
+        PS1="${PS1}\[$(set_color red)\]$(prompt_workingdir)"
     fi
 
     # Closing bracket } and $\#
+    # FIXME: duplicate code with user
     if [ ${UID} -eq 0 ]; then
-        user_mark="\[${COLOR_RED}\]#"
+        user_mark="\[$(set_color red)\]#"
         if [ "${USER}" == "${LOGNAME}" ]; then
             if [[ ${SUDO_USER} ]]; then
-                PS1="${PS1}\[${COLOR_RED}\]"
+                PS1="${PS1}\[$(set_color red)\]"
             else
-                PS1="${PS1}\[${COLOR_LIGHTRED}\]"
+                PS1="${PS1}\[$(set_color ered)\]"
             fi
         else
-            PS1="${PS1}\[${COLOR_YELLOW}\]"
+            PS1="${PS1}\[$(set_color yellow)\]"
         fi
     else
-        user_mark="\[${COLOR_GREEN}\]$"
+        user_mark="\[$(set_color green)\]$"
         if [ "${USER}" == "${LOGNAME}" ]; then
-            PS1="${PS1}\[${COLOR_GREEN}\]"
+            PS1="${PS1}\[$(set_color green)\]"
         else
-            PS1="${PS1}\[${COLOR_BROWN}\]"
+            PS1="${PS1}\[$(set_color eyellow)\]"
         fi
     fi
 
-    PS1="${PS1} }$user_mark\[${COLOR_DEFAULT}\] "
+    PS1="${PS1} }$user_mark\[$(set_color)\] "
 }
 
 # Trim working dir to 1/3 the screen width
-function prompt_workingdir () {
+function prompt_workingdir() {
   local pwdmaxlen=$(($COLUMNS))
   let pwdmaxlen=$pwdmaxlen/3
   local trunc_symbol="..."
@@ -346,10 +380,15 @@ function prompt_workingdir () {
 #     xemacs.
 # 3   Display promptcmd for all other cases.
 
-function load_prompt () {
+function load_prompt() {
     # Get PIDs
     local parent_process=$(ps -p $PPID -o comm | tail -n 1)
     local my_process=$(ps -p $$ -o comm | tail -n 1)
+
+    # Trap DEBUG to be able to set a timer
+    if [ ${load_part_prompt_slowcommandwarn} ]; then
+	trap 'if [ "x${_NJB_ENABLETIMER}" == "xyes" ]; then _NJB_PREVTIME=$(date +%s); _NJB_ENABLETIMER=no; fi' DEBUG
+    fi
 
     if  [[ $parent_process == script* ]]; then
         PROMPT_COMMAND=""

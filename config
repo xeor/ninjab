@@ -23,7 +23,7 @@ editor='nano' # Your favorite editor, will be set in 'loader' if set
 [ ${startup_debug} ] && echo "Asuming os is ${os}" ||:
 
 #load_global_bashrc=1		# Try to load /etc/bashrc
-load_global_bash_completion=1	# Try to load /etc/bash_completion or /opt/local/etc/bash_completion on osx (port install bash-completion) (can delay startup of new shells by seconds!) But fast when the files are cached in memory
+load_global_bash_completion=1	# Try to load /etc/bash_completion, /opt/local/etc/bash_completion or brew bash completion on osx (port install bash-completion) (can delay startup of new shells by seconds!) But fast when the files are cached in memory
 
 # If you want to be asked to load ninjab. Create a file in /etc/ninjab_ask or ~/.ninjab_ask
 # and fill out this optional question (will be "do you want to load more usefull bash configurations?" as default)
@@ -78,14 +78,19 @@ load_part_aliases_same=1 # To get common enhancements for some commands, like rm
 load_part_prompt=1
 #load_part_prompt_notifyDaychange=1
 #
-# Set static info at the beginning of the bash prompt. Can also be defined in /etc/sysinfo or ~/.sysinfo
-# system_type makes the color, crit is red, prod is yellow and test is green. "ignore" will makes it skip sysinfo file checks
-system_type="ignore" # crit|prod|test or ignore
+# Set static info at the beginning of the bash prompt. Can also be defined in /etc/sysinfo or ~/.sysinfo if system_info_check is defined,
+# or you can define them here
+#system_info_check=1
+
+# system_type makes the color, crit is red, prod is yellow and test is green.
+#system_type="crit" # crit|prod|test or ignore
 #
 # This is static text at the beginning of the prompt. Will have the color defined above if any.
 # Can also be defined in /etc/sysinfo or ~/.sysinfo
 #system_category="webserver"
 
+# Show runtime of last command if it took more than X seconds, comment out to disable
+load_part_prompt_slowcommandwarn=10
 
 ########################################
 # parts/5_stateinfo

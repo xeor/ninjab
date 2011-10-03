@@ -9,6 +9,7 @@ mydir=$(cd $(dirname ${BASH_SOURCE:-$0});pwd)
 os=$(uname -s)
 bash_version=${BASH_VERSION%.*}
 
+int_ninjab_available_parts=''
 . ${mydir}/functions
 
 . ${mydir}/config
@@ -50,6 +51,14 @@ if [ ! -z $load_global_bash_completion ]; then
 	[ ${startup_debug} ] && echo -n "Loading global /opt/local/etc/bash_completion" ||:
 	. /opt/local/etc/bash_completion
 	[ ${startup_debug} ] && echo " - done" ||:
+    fi
+
+    if which breww &> /dev/null; then
+	if [ -f $(brew --prefix)/etc/bash_completion ]; then
+	    [ ${startup_debug} ] && echo -n "Loading brew installed bash_completion" ||:
+	    . $(brew --prefix)/etc/bash_completion
+	    [ ${startup_debug} ] && echo " - done" ||:
+	fi
     fi
 fi
 
