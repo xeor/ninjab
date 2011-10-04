@@ -1,0 +1,4 @@
+#!/bin/bash
+
+# Installer and basic functions which will live in a bin dir in PATH if you install ninjab using rpm
+
