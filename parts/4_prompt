@@ -245,8 +245,11 @@ function promptcmd() {
 	STATUS=$(git status 2>/dev/null)
 	if [ $? -ne 128 ]; then
 	    [[ "$STATUS" == *'working directory clean'* ]] || DIRTY='*'
-	    GITSTATUS="($(git describe --all --always 2> /dev/null | sed 's/^heads\///' 2>/dev/null)$DIRTY)"
-            PS1="${PS1}\[$(set_color magenta)\][git:${GITSTATUS}]\[$(set_color)\] "
+	    GITSTATUS="$(git branch --no-color | grep ^* | sed 's/^\* //')"
+	    if [ "${GITSTATUS}" == "(no branch)" ]; then
+		GITSTATUS="$(git describe --all --always 2> /dev/null | sed 's/^heads\///' 2>/dev/null)"
+	    fi
+            PS1="${PS1}\[$(set_color magenta)\][git:${GITSTATUS}${DIRTY}]\[$(set_color)\] "
 	fi
     fi
 
@@ -266,7 +269,7 @@ function promptcmd() {
 
     # tmux sessions
     if which tmux &> /dev/null; then
-	local DTCHTMUX=$(tmux ls 2> /dev/null | wc -l | sed -e 's/[^0-9]//g')
+	local DTCHTMUX=$(tmux ls 2> /dev/null | grep -v "(attached)" | wc -l | sed -e 's/[^0-9]//g')
 	if [ ${DTCHTMUX} -gt 2 ]; then
             PS1="${PS1}\[$(set_color red)\][tmux:${DTCHTMUX}]\[$(set_color)\] "
 	elif [ ${DTCHTMUX} -gt 0 ]; then
