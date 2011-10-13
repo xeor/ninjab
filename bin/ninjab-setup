@@ -1,0 +1,65 @@
+#!/bin/bash
+
+# FIXME:
+#  - uninstaller
+#  - Configuration setup
+
+# Installer and basic functions which will live in a bin dir in PATH if you install ninjab using rpm
+
+mydir=$(cd $(dirname ${BASH_SOURCE:-$0});pwd)
+
+if [ -d "/usr/share/ninjab" ]; then
+    ninjab_path="/usr/share/ninjab"
+    echo "Found ninjab base under ${ninjab_path}"
+else
+    if [ -f "${mydir}/../loader" -a -f "${mydir}/../config" -a -f "${mydir}/../functions" ]; then
+	ninjab_path=$(cd ${mydir}/..;pwd)
+	echo "Found ninjab base in ${ninjab_path}"
+    else
+	echo "Unable to find ninjab base, did you install it? It should also work using git"
+	exit 1
+    fi
+fi
+
+
+if [ ! -f "${ninjab_path}/functions" ]; then
+    echo "Unable to find ninjab, unable to setup"
+    exit 1
+else
+    source "${ninjab_path}/functions"
+fi
+
+echo "This setup will ask you some questions. It wont do anything dangerous, and it will always tell you what it does.."
+
+
+
+if [ $(id -u) -eq 0 ]; then
+    if int_ninjab_yesno --default yes "Do you want me to enable ninjab systemwide for all users? [Yn]"; then
+	systemwide=true
+    fi
+else
+    echo "You do not have superuser permissions so I cant enable ninjab systemwide."
+    echo "If you want me to do that, please ^c this script and run it again."
+fi
+
+if [ ${systemwide} ]; then
+    if [ -d "/etc/profile.d" ]; then
+	if int_ninjab_yesno --default yes "Found /etc/profile.d, which is the best option to enable ninjab globally. Do you want me to create a loader in that directory? [Yn]"; then
+	    echo -e "#!/bin/bash\n\n. ${ninjab_path}/loader" > /etc/profile.d/ninjab.sh
+	    chmod +x /etc/profile.d/ninjab.sh
+	    echo "Installed.."
+	    exit 0
+	fi
+    fi
+
+    if int_ninjab_yesno --default yes "Do you want me to append the ninjab loader to /etc/profile? [Yn]"; then
+	echo ". ${ninjab_path}/loader" >> /etc/profile
+	echo "Installed.."
+    fi
+else
+    if int_ninjab_yesno --default yes "Do you want me to append the ninjab loader to ~/.profile? [Yn]"; then
+	echo ". ${ninjab_path}/loader" >> ~/.profile
+	echo "Installed.."
+	exit 0
+    fi
+fi
