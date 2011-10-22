@@ -190,7 +190,7 @@ function set_color() {
                 green) echo -e '\e[0;32m';;
                 yellow) echo -e '\e[0;33m';;
                 blue) echo -e '\e[0;34m';;
-                magenta) '\e[0;35m';;
+                magenta) echo -e '\e[0;35m';;
                 cyan) echo -e '\e[0;36m';;
                 white) echo -e '\e[0;37m';;
 
