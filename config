@@ -16,6 +16,9 @@ esac
 # Misc settings
 ##
 editor='nano' # Your favorite editor, will be set in 'loader' if set
+colormode='bash' # What should create our colors, 'tput' or 'bash'.
+                 # Tput is the "new" way of doing colors, but is a
+                 # little  buggy some times.. Anything else disables colors
 
 #startup_debug=1 # Outputs extra information at the start of a new shell
 
