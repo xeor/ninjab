@@ -130,53 +130,106 @@ function int_ninjab_yesno() {
 }
 
 function set_color() {
-    # Thanks from https://github.com/wayneeseguin/rvm/blob/master/scripts/color
-    case "$1" in
-        # regular colors
-	black) tput setaf 0 ;;
-	red) tput setaf 1 ;;
-	green) tput setaf 2 ;;
-	yellow) tput setaf 3 ;;
-	blue) tput setaf 4 ;;
-	magenta) tput setaf 5 ;;
-	cyan) tput setaf 6 ;;
-	white) tput setaf 7 ;;
+    [ "${2}" == "tput" ] && colormode=tput
+    case $colormode in
+        tput)
+            # Thanks from https://github.com/wayneeseguin/rvm/blob/master/scripts/color
+            case "$1" in
+                # regular colors
+	        black) tput setaf 0 ;;
+	        red) tput setaf 1 ;;
+	        green) tput setaf 2 ;;
+	        yellow) tput setaf 3 ;;
+	        blue) tput setaf 4 ;;
+	        magenta) tput setaf 5 ;;
+	        cyan) tput setaf 6 ;;
+	        white) tput setaf 7 ;;
 
-        # emphasized (bolded) colors
-	eblack) tput bold ; tput setaf 0 ;;
-	ered) tput bold ; tput setaf 1 ;;
-	egreen) tput bold ; tput setaf 2 ;;
-	eyellow) tput bold ; tput setaf 3 ;;
-	eblue) tput bold ; tput setaf 4 ;;
-	emagenta) tput bold ; tput setaf 5 ;;
-	ecyan) tput bold ; tput setaf 6 ;;
-	ewhite) tput bold ; tput setaf 7 ;;
+                # emphasized (bolded) colors
+	        eblack) tput bold ; tput setaf 0 ;;
+	        ered) tput bold ; tput setaf 1 ;;
+	        egreen) tput bold ; tput setaf 2 ;;
+	        eyellow) tput bold ; tput setaf 3 ;;
+	        eblue) tput bold ; tput setaf 4 ;;
+	        emagenta) tput bold ; tput setaf 5 ;;
+	        ecyan) tput bold ; tput setaf 6 ;;
+	        ewhite) tput bold ; tput setaf 7 ;;
+                
+                # underlined colors
+	        ublack) set smul unset rmul ; tput setaf 0 ;;
+	        ured) set smul unset rmul ; tput setaf 1 ;;
+	        ugreen) set smul unset rmul ; tput setaf 2 ;;
+	        uyellow) set smul unset rmul ; tput setaf 3 ;;
+	        ublue) set smul unset rmul ; tput setaf 4 ;;
+	        umagenta) set smul unset rmul ; tput setaf 5 ;;
+	        ucyan) set smul unset rmul ; tput setaf 6 ;;
+	        uwhite) set smul unset rmul ; tput setaf 7 ;;
+                
+                # background colors
+	        bblack) tput setab 0 ;;
+	        bred) tput setab 1 ;;
+	        bgreen) tput setab 2 ;;
+	        byellow) tput setab 3 ;;
+	        bblue) tput setab 4 ;;
+	        bmagenta) tput setab 5 ;;
+	        bcyan) tput setab 6 ;;
+	        bwhite) tput setab 7 ;;
+                
+                # Defaults
+	        default) tput setaf 9 ;;
+	        bdefault) tput setab 9 ;;
+	        none) tput sgr0 ;;
+	        *) tput sgr0 # Reset
+            esac
+            ;;
+        bash)
+            case $1 in
+                # regular colors
+                black) echo -e '\e[0;30m';;
+                red) echo -e '\e[0;31m';;
+                green) echo -e '\e[0;32m';;
+                yellow) echo -e '\e[0;33m';;
+                blue) echo -e '\e[0;34m';;
+                magenta) echo -e '\e[0;35m';;
+                cyan) echo -e '\e[0;36m';;
+                white) echo -e '\e[0;37m';;
 
-        # underlined colors
-	ublack) set smul unset rmul ; tput setaf 0 ;;
-	ured) set smul unset rmul ; tput setaf 1 ;;
-	ugreen) set smul unset rmul ; tput setaf 2 ;;
-	uyellow) set smul unset rmul ; tput setaf 3 ;;
-	ublue) set smul unset rmul ; tput setaf 4 ;;
-	umagenta) set smul unset rmul ; tput setaf 5 ;;
-	ucyan) set smul unset rmul ; tput setaf 6 ;;
-	uwhite) set smul unset rmul ; tput setaf 7 ;;
+                # emphasized (bolded) colors
+                eblack) echo -e '\e[1;30m';;
+                ered) echo -e '\e[1;31m';;
+                egreen) echo -e '\e[1;32m';;
+                eyellow) echo -e '\e[1;33m';;
+                eblue) echo -e '\e[1;34m';;
+                emagenta) echo -e '\e[1;35m';;
+                ecyan) echo -e '\e[1;36m';;
+                ewhite) echo -e '\e[1;37m';;
 
-        # background colors
-	bblack) tput setab 0 ;;
-	bred) tput setab 1 ;;
-	bgreen) tput setab 2 ;;
-	byellow) tput setab 3 ;;
-	bblue) tput setab 4 ;;
-	bmagenta) tput setab 5 ;;
-	bcyan) tput setab 6 ;;
-	bwhite) tput setab 7 ;;
-
-        # Defaults
-	default) tput setaf 9 ;;
-	bdefault) tput setab 9 ;;
-	none) tput sgr0 ;;
-	*) tput sgr0 # Reset
+                # underlined colors
+                ublack) echo -e '\e[4;30m';;
+                ured) echo -e '\e[4;31m';;
+                ugreen) echo -e '\e[4;32m';;
+                uyellow) echo -e '\e[4;33m';;
+                ublue) echo -e '\e[4;34m';;
+                umagenta) echo -e '\e[4;35m';;
+                ucyan) echo -e '\e[4;36m';;
+                uwhite) echo -e '\e[4;37m';;
+                
+                # background colors
+                bblack) echo -e '\e[40m';;
+                bred) echo -e '\e[41m';;
+                bgreen) echo -e '\e[42m';;
+                byellow) echo -e '\e[43m';;
+                bblue) echo -e '\e[44m';;
+                bmagenta) echo -e '\e[45m';;
+                bcyan) echo -e '\e[46m';;
+                bwhite) echo -e '\e[47m';;
+                
+                # Defaults
+	        default) echo -e '\e[0;37m';;
+ 	        bdefault) echo -e '\e[40m';;
+	        none) echo -e '\e[0m';;
+	        *) echo -e '\e[0m';;
+            esac
     esac
 }
 

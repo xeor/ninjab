@@ -71,8 +71,8 @@ alias cd-source='cd `pwd -P`' # Goto the "real" path of the directory you are in
 
 # One letters
 if [ ! -z ${load_part_aliases_oneletters} ]; then
-    [ ${startup_debug} ] && echo "One letter aliases, j=jobs -l, c=clear, l=ll, p=ps aux, n=nano" ||:
-    alias j='jobs -l'
+    [ ${startup_debug} ] && echo "One letter aliases, c=clear, l=ll, p=ps aux, n=nano" ||:
+    #alias j='jobs -l' # Collides with autojoin package. And is not really that usefull
     alias c='clear' # Quick clear
     alias l='ll'
     alias p='psa'
