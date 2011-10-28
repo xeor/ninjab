@@ -402,7 +402,7 @@ function load_prompt() {
         PS1="\u@\h { \w }\$ "
     else
         export DAY=$(date +%A)
-        PROMPT_COMMAND="promptcmd; ${PROMPT_COMMAND:-:}"
+        PROMPT_COMMAND="${PROMPT_COMMAND:-:}; promptcmd"
         #PROMPT_COMMAND=promptcmd
      fi
     export PS1 PROMPT_COMMAND
