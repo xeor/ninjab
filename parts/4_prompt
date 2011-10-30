@@ -124,14 +124,16 @@ function promptcmd() {
     fi
 
     # Titlebar
-    case ${TERM} in
-        xterm*  )
-            local TITLEBAR='\[\033]0;\u@\h: { \w }  \007\]'
-            ;;
-        *       )
-            local TITLEBAR=''
-            ;;
-    esac
+    if [ -z "${load_part_prompt_dontset_titlebar}" ]; then
+        case ${TERM} in
+            xterm*  )
+                local TITLEBAR='\[\033]0;\u@\h: { \w }  \007\]'
+                ;;
+            *       )
+                local TITLEBAR=''
+                ;;
+        esac
+    fi
 
     PS1=""
 
