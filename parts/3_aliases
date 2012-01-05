@@ -88,7 +88,7 @@ if [ ! -z ${load_part_aliases_ls} ]; then
 	Darwin)
 	    [ ${startup_debug} ] && echo "ll will also display osx attributes" ||:
 	    [ ! -z ${load_part_aliases_same} ] && alias ls='ls -hF'
-	    alias ll='ls -lO' # View osx attributes too
+	    alias ll='ls -lOe' # View osx attributes and fs attributes too
 	    ;;
 	Linux)
 	    [ ${startup_debug} ] && echo "Add colors for filetypes, ll groups directories first, lx sorts by extension" ||:

@@ -68,7 +68,8 @@ cat <<EOF
                   If two numbers, 1st is last updated version, 2nd is your version
                   If one number, your version is the last checked out
      $(set_color magenta tput)[git:#]$(set_color none tput)      == Display version of current git directory
-                  Will contain * at end if you got local modification
+                  Will contain * if you got local modification
+                  Will contain ex, +2 if you are 2 commits ahead of origin
    DYNAMIC SECTION:
        (If count is zero for any of the following, it will not appear)
      $(set_color red tput)[es:#]$(set_color none tput)       == Exit code of last command run
@@ -124,14 +125,16 @@ function promptcmd() {
     fi
 
     # Titlebar
-    case ${TERM} in
-        xterm*  )
-            local TITLEBAR='\[\033]0;\u@\h: { \w }  \007\]'
-            ;;
-        *       )
-            local TITLEBAR=''
-            ;;
-    esac
+    if [ -z "${load_part_prompt_dontset_titlebar}" ]; then
+        case ${TERM} in
+            xterm*  )
+                local TITLEBAR='\[\033]0;\u@\h: { \w }  \007\]'
+                ;;
+            *       )
+                local TITLEBAR=''
+                ;;
+        esac
+    fi
 
     PS1=""
 
@@ -250,7 +253,13 @@ function promptcmd() {
 	    if [ "${GITSTATUS}" == "(no branch)" ]; then
 		GITSTATUS="$(git describe --all --always 2> /dev/null | sed 's/^heads\///' 2>/dev/null)"
 	    fi
-            PS1="${PS1}\[$(set_color magenta)\][git:${GITSTATUS}${DIRTY}]\[$(set_color)\] "
+            AHEAD_COUNT="$(git rev-list HEAD --not --remotes | wc -l | tr -d ' ')"
+            if [[ "x${AHEAD_COUNT}" != "x0" ]]; then
+                AHEAD="+${AHEAD_COUNT}"
+            else
+                AHEAD=''
+            fi
+            PS1="${PS1}\[$(set_color magenta)\][git:${GITSTATUS}${DIRTY}${AHEAD}]\[$(set_color)\] "
 	fi
     fi
 
@@ -402,7 +411,8 @@ function load_prompt() {
         PS1="\u@\h { \w }\$ "
     else
         export DAY=$(date +%A)
-        PROMPT_COMMAND="${PROMPT_COMMAND:-:}; promptcmd"
+        CURRENT_PROMPT="$(echo ${PROMPT_COMMAND:-:} | sed 's/\; promptcmd*//g')" # Little cleanup as well..
+        PROMPT_COMMAND="${CURRENT_PROMPT}; promptcmd"
         #PROMPT_COMMAND=promptcmd
      fi
     export PS1 PROMPT_COMMAND

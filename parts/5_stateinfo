@@ -1,3 +1,4 @@
+
 if [ ${load_part_stateinfo} ]; then
     [ ${startup_debug} ] && echo " loading" ||:
 else
@@ -246,7 +247,7 @@ function stateinfo() {
     filler
 }
 
-if [ ! -z ${load_part_stateinfo_alias} ]; then
+if [ ! -z "${load_part_stateinfo_alias}" ]; then
     a="alias ${load_part_stateinfo_alias}='stateinfo'"
     eval $a
     unset a
