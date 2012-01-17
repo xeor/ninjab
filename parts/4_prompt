@@ -207,7 +207,7 @@ function promptcmd() {
         SSH_FLAG=1
     fi
     if [ ${SSH_FLAG} -eq 1 ]; then
-       PS1="${PS1}\[$(set_color cyan)\h\[$(set_color)\] "
+        PS1="${PS1}\[$(set_color cyan)\]\h\[$(set_color)\] "
     elif [[ -n ${SESS_SRC} ]]; then
         if [ "${SESS_SRC}" == "(:0.0)" ]; then
            PS1="${PS1}\[$(set_color green)\]\h\[$(set_color)\] "
