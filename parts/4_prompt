@@ -210,7 +210,7 @@ function promptcmd() {
         PS1="${PS1}\[$(set_color cyan)\]\h\[$(set_color)\] "
     elif [[ -n ${SESS_SRC} ]]; then
         if [ "${SESS_SRC}" == "(:0.0)" ]; then
-           PS1="${PS1}\[$(set_color green)\]\h\[$(set_color)\] "
+            PS1="${PS1}\[$(set_color green)\]\h\[$(set_color)\] "
         else
             local parent_process=$(ps -p $PPID -o comm | tail -n 1)
             if [[ "$parent_process" == "in.rlogind*" ]]; then
@@ -229,8 +229,8 @@ function promptcmd() {
 
     # Check for python virtualenv
     if [[ $VIRTUAL_ENV ]]; then
-      VIRTNAME=$(basename $VIRTUAL_ENV)
-      PS1="${PS1}\[$(set_color ecyan)[venv:${VIRTNAME}]\[$(set_color)\] "
+	VIRTNAME=$(basename $VIRTUAL_ENV)
+	PS1="${PS1}\[$(set_color ecyan)[venv:${VIRTNAME}]\[$(set_color)\] "
     fi
 
     # SVN status if .svn exist
@@ -371,19 +371,19 @@ function promptcmd() {
 
 # Trim working dir to 1/3 the screen width
 function prompt_workingdir() {
-  local pwdmaxlen=$(($COLUMNS))
-  let pwdmaxlen=$pwdmaxlen/3
-  local trunc_symbol="..."
-  if [[ $PWD == $HOME* ]]; then
-    newPWD="~${PWD#$HOME}"
-  else
-    newPWD=${PWD}
-  fi
-  if [ ${#newPWD} -gt $pwdmaxlen ]; then
-    local pwdoffset=$(( ${#newPWD} - $pwdmaxlen + 3 ))
-    newPWD="${trunc_symbol}${newPWD:$pwdoffset:$pwdmaxlen}"
-  fi
-  echo $newPWD
+    local pwdmaxlen=$(($COLUMNS))
+    let pwdmaxlen=$pwdmaxlen/3
+    local trunc_symbol="..."
+    if [[ $PWD == $HOME* ]]; then
+	newPWD="~${PWD#$HOME}"
+    else
+	newPWD=${PWD}
+    fi
+    if [ ${#newPWD} -gt $pwdmaxlen ]; then
+	local pwdoffset=$(( ${#newPWD} - $pwdmaxlen + 3 ))
+	newPWD="${trunc_symbol}${newPWD:$pwdoffset:$pwdmaxlen}"
+    fi
+    echo $newPWD
 }
 
 # Determine what prompt to display:
@@ -414,9 +414,8 @@ function load_prompt() {
         CURRENT_PROMPT="$(echo ${PROMPT_COMMAND:-:} | sed 's/\; promptcmd*//g')" # Little cleanup as well..
         PROMPT_COMMAND="${CURRENT_PROMPT}; promptcmd"
         #PROMPT_COMMAND=promptcmd
-     fi
+    fi
     export PS1 PROMPT_COMMAND
-
     export SUDO_PS1="\[\h:\w\] \u\\$ " # We should not display this prompt when using sudo su, or sudo su -. It will break!
 }
 
