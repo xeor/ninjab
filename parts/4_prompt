@@ -251,9 +251,9 @@ function promptcmd() {
 	    [[ "$STATUS" == *'working directory clean'* ]] || DIRTY='*'
 	    GITSTATUS="$(git branch --no-color | grep ^* | sed 's/^\* //')"
 	    if [ "${GITSTATUS}" == "(no branch)" ]; then
-		GITSTATUS="$(git describe --all --always 2> /dev/null | sed 's/^heads\///' 2>/dev/null)"
+		GITSTATUS="$(git describe --all --always 2> /dev/null | sed 's/^heads\///' 2> /dev/null)"
 	    fi
-            AHEAD_COUNT="$(git rev-list HEAD --not --remotes | wc -l | tr -d ' ')"
+            AHEAD_COUNT="$(git rev-list HEAD --not --remotes 2> /dev/null | wc -l | tr -d ' ')"
             if [[ "x${AHEAD_COUNT}" != "x0" ]]; then
                 AHEAD="+${AHEAD_COUNT}"
             else
