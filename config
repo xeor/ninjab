@@ -96,6 +96,23 @@ load_part_prompt=1
 # Show runtime of last command if it took more than X seconds, comment out to disable
 load_part_prompt_slowcommandwarn=10
 
+# Set to load different parts of the per folder settings.
+# If the setting is not here prepended with load_part_njbcfg__... it wont get loaded.
+# Example (first setting), this will enable loading of the per folder setting called
+# "titlebar". If you want to set this setting, add a line like:
+# "titlebar your titlebar" without the quotes to a file called
+# .njbcfg in the folder you want the titlebar to change.
+load_part_prompt_njbcfg_set_titlebar=1
+
+# /etc/sysinfo or ~/.sysinfo will overwrite this settings if they are set
+#load_part_prompt_njbcfg_system_type=1
+#load_part_prompt_njbcfg_system_category=1
+
+# If you want extra safety, this settings will make sure that .njbcfg
+# configs are only loaded if we are the owner of the file.
+#load_part_prompt_force_njbcfg_owner=1
+
+
 ########################################
 # parts/5_stateinfo
 #

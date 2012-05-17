@@ -126,15 +126,27 @@ function promptcmd() {
     fi
 
     # Behavior configrations..
-    if [ -f "${PWD}/.ninjab" ]; then
-        # Safe way to load extra configuration
-        while read varname value; do
-            # Because of the potential that our internal variables can
-            # be overwritten, only accept the ones that starts with njbcfg_
-            if [[ "${varname}" = "njbcfg_"* ]]; then
-                declare "$varname=$value"
+    if [ -f "${PWD}/.njbcfg" ]; then
+        if [ "${load_part_prompt_force_njbcfg_owner}" ]; then
+            if ! test -O "${PWD}/.njbcfg"; then
+                local skip_njbcfg=1
             fi
-        done < "${PWD}/.ninjab"
+        fi
+
+        if [ -z "${skip_njbcfg}" ]; then
+            # Safe way to load extra configuration
+            while read varname value; do
+                # Because of the potential that our internal variables can
+                # be overwritten, we should be carefull here..
+                if [[ "${varname}" =~ ^[a-z0-9_]+$ ]]; then
+                    # Make sure we have set it to be loadable
+                    eval "enabled_check=\$load_part_prompt_njbcfg_${varname}"
+                    if [[ "${enabled_check}" ]]; then
+                        declare "$varname=$value"
+                    fi
+                fi
+            done < "${PWD}/.njbcfg"
+        fi
     fi
 
     # Titlebar
@@ -147,6 +159,11 @@ function promptcmd() {
                 local TITLEBAR=''
                 ;;
         esac
+    fi
+
+    # If its set for this directory
+    if [ "${set_titlebar}" ]; then
+        local TITLEBAR="\[\033]0;${set_titlebar}\007\]"
     fi
 
     PS1=""
