@@ -33,6 +33,7 @@ int_ninjab_available_parts="$int_ninjab_available_parts 4_prompt"
 #  - Added timer for last command
 #  - Added tmux session counter, just like screen.
 #  - More changes to color handeling.
+#  - Added per folder configuration option
 #
 # Tested
 #  - OK on OSX 10.6.7 with bash 3.2.48
@@ -122,6 +123,18 @@ function promptcmd() {
     local TTY=$(tty | awk -F/dev/ '{print $2}')
     if [[ ${TTY} ]]; then
         local SESS_SRC=$(who | grep "$TTY "  | awk '{print $6 }')
+    fi
+
+    # Behavior configrations..
+    if [ -f "${PWD}/.ninjab" ]; then
+        # Safe way to load extra configuration
+        while read varname value; do
+            # Because of the potential that our internal variables can
+            # be overwritten, only accept the ones that starts with njbcfg_
+            if [[ "${varname}" = "njbcfg_"* ]]; then
+                declare "$varname=$value"
+            fi
+        done < "${PWD}/.ninjab"
     fi
 
     # Titlebar

@@ -1,3 +1,7 @@
+## 0.3.4
+
+* parts-prompt - Per folder configuration posibility
+
 ## 0.3.3 (2012-01-22)
 
 * parts-prompt - Only show detached tmux sessions
