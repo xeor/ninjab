@@ -104,6 +104,11 @@ load_part_prompt_slowcommandwarn=10
 # .njbcfg in the folder you want the titlebar to change.
 load_part_prompt_njbcfg_set_titlebar=1
 
+# Will make it possible to use 'activate' to activate a virtualenv
+# in the current directory. Set 'virtualenv' to the main folder of
+# your virtualenv in .njbcfg to use it.
+load_part_prompt_njbcfg_virtualenv=1
+
 # /etc/sysinfo or ~/.sysinfo will overwrite this settings if they are set
 #load_part_prompt_njbcfg_system_type=1
 #load_part_prompt_njbcfg_system_category=1

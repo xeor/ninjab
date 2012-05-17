@@ -263,6 +263,24 @@ function promptcmd() {
 	PS1="${PS1}\[$(set_color ecyan)[venv:${VIRTNAME}]\[$(set_color)\] "
     fi
 
+    # Look for and set the 'activate' alias for the virtualenv if it
+    # is set in the .njbcfg file
+    if [ "${virtualenv}" ]; then
+        if test -f "${virtualenv}/bin/activate"; then
+            if [ -z "${loaded_activate_alias}" ]; then
+                # Only show once
+	        echo "Type 'activate' to activate '${virtualenv}' virtualenv"
+            fi
+            alias activate="source ${virtualenv}/bin/activate"
+            loaded_activate_alias=1
+        fi
+    else
+        if [ "${loaded_activate_alias}" ]; then
+            unset loaded_activate_alias
+            unalias activate # Cleanup if we have gone outside our virtualenv mother
+        fi
+    fi
+
     # SVN status if .svn exist
     if [ -d .svn ]; then
 	if which svn &> /dev/null ; then
