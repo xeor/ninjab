@@ -260,7 +260,7 @@ function promptcmd() {
     # Check for python virtualenv
     if [[ $VIRTUAL_ENV ]]; then
 	VIRTNAME=$(basename $VIRTUAL_ENV)
-	PS1="${PS1}\[$(set_color ecyan)[venv:${VIRTNAME}]\[$(set_color)\] "
+	PS1="${PS1}\[$(set_color ecyan)\][venv:${VIRTNAME}]\[$(set_color)\] "
     fi
 
     # Look for and set the 'activate' alias for the virtualenv if it
