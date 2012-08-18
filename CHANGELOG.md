@@ -1,6 +1,8 @@
 ## 0.3.4
 
 * parts-prompt - Per folder configuration posibility
+* parts-prompt - Some minor bugfixes with text overwriting other text on the shell
+* parts-prompt - Unlimited history extra log. Enabled by default, set load_part_bash_extra_unlimited_history to "" in config to disable.
 
 ## 0.3.3 (2012-01-22)
 

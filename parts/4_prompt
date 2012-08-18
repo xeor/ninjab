@@ -125,6 +125,11 @@ function promptcmd() {
         local SESS_SRC=$(who | grep "$TTY "  | awk '{print $6 }')
     fi
 
+    # Unlimited bash history, idea from http://www.debian-administration.org/articles/543
+    if [ "${load_part_bash_extra_unlimited_history}" ]; then
+	echo "$USER $(history 1)" >> ~/.bash_history_unlimited
+    fi
+
     # Behavior configrations..
     if [ -f "${PWD}/.njbcfg" ]; then
         if [ "${load_part_prompt_force_njbcfg_owner}" ]; then

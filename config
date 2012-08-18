@@ -55,6 +55,10 @@ load_part_bash_history=1 # Timestamp in history, ignore dupes
 load_part_bash_hotkeys=1 # Create some hotkeys, see documentation for what.
 #load_part_bash_tweek_hotkeys=1 # Tweek some default bash hotkeys behavior. Eg turns on cycling TAB completion
 
+# Creates a file under ~/.bash_history_unlimited that contains ALL entered commands in the format "user last_entry_in_the_history" (history 1) is appended that is.. Username is there if you have used sudo
+# This is ment as a log..
+load_part_bash_extra_unlimited_history=1
+
 ########################################
 # parts/2_oneliners
 ########################################
