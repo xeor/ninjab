@@ -1,8 +1,10 @@
-## 0.3.4
+## 0.3.4 (2012-09-18)
 
 * parts-prompt - Per folder configuration posibility
 * parts-prompt - Some minor bugfixes with text overwriting other text on the shell
 * parts-prompt - Unlimited history extra log. Enabled by default, set load_part_bash_extra_unlimited_history to "" in config to disable.
+* ninjab-command - A way to unload ninjab (prompt stuff for now) with 'ninjab unload'
+* Bug fixes
 
 ## 0.3.3 (2012-01-22)
 
