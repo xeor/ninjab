@@ -262,7 +262,16 @@ function ninjab() {
 		    echo "Part $p"
 		done
 		echo
+		echo
+		echo "'ninjab' would reload ninjab"
+		echo "'ninjab unload' to unload and set a basic prompt temporary"
 	    fi
+	    ;;
+	unload)
+	    echo "Unloading most of ninjab, note that we cant set everything back. Like aliases and bash options"
+	    echo "Type 'ninjab' to get the prompt back in this session"
+	    unset PROMPT_COMMAND SUDO_PS1
+	    export PS1="\u@\h { \w }\$ "
 	    ;;
 	*)
 	    echo "Loading/Reloading ninjab, type 'ninjab help' for help"
