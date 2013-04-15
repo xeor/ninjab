@@ -93,7 +93,7 @@ if [ ! -z ${load_part_aliases_ls} ]; then
 	Linux)
 	    [ ${startup_debug} ] && echo "Add colors for filetypes, ll groups directories first, lx sorts by extension" ||:
 	    [ ! -z ${load_part_aliases_same} ] && alias ls='ls -hF --color'  # add colors for filetype recognition
-	    alias ll='ls -l --group-directories-first'
+	    alias ll='ls -l'
 	    alias lx='ls -lXB'         # sort by extension
 	    ;;
     esac
@@ -112,3 +112,11 @@ if [ ! -z ${load_part_aliases_ls} ]; then
     fi
 fi
 
+# Select processes that are using the most CPU and show just show the top 10
+#alias psc='ps haux | sort -k 3nr | head | awk "BEGIN {printf \"${COLOR_CYAN}%CPU${COLOR_DEFAULT}\t%MEM\tPID\t%USER\tCOMMAND\n\"} {printf \"${COLOR_CYAN}%s${COLOR_DEFAULT}\t%s\t%s\t%s\t%s\n\", \$3, \$4, \$2, \$1, \$11}"'
+
+# Select processes that are using the most memory and just show the top 10
+#alias psm='ps haux | sort -k 4nr | head | awk "BEGIN {printf \"%CPU\t${COLOR_CYAN}%MEM${COLOR_DEFAULT}\tPID\t%USER\tCOMMAND\n\"} {printf \"%s\t${COLOR_CYAN}%s${COLOR_DEFAULT}\t%s\t%s\t%s\n\", \$3, \$4, \$2, \$1, \$11}"'
+
+alias psc='ps haux | sort -k 3nr | head | awk "BEGIN {printf \"${COLOR_CYAN}CPU${COLOR_DEFAULT}\tMEM\tPID\tUSER\tCOMMAND\n\"} {printf \"${COLOR_CYAN}%s${COLOR_DEFAULT}\t%s\t%s\t%s\t%s\n\", \$3, \$4, \$2, \$1, \$11}"'
+alias psm='ps haux | sort -k 4nr | head | awk "BEGIN {printf \"%CPU\t${COLOR_CYAN}%MEM${COLOR_DEFAULT}\tPID\t%USER\tCOMMAND\n\"} {printf \"%s\t${COLOR_CYAN}%s${COLOR_DEFAULT}\t%s\t%s\t%s\n\", \$3, \$4, \$2, \$1, \$11}"'
