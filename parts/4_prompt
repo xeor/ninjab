@@ -301,7 +301,7 @@ function promptcmd() {
 	local DIRTY STATUS
 	STATUS=$(git status 2>/dev/null)
 	if [ $? -ne 128 ]; then
-	    [[ "$STATUS" == *'working directory clean'* ]] || DIRTY='*'
+	    [[ "$STATUS" == *'working directory clean'* || "$STATUS" == *'working tree clean'* ]] || DIRTY='*'
 	    GITSTATUS="$(git branch --no-color | grep ^* | sed 's/^\* //')"
 	    if [ "${GITSTATUS}" == "(no branch)" ]; then
 		GITSTATUS="$(git describe --all --always 2> /dev/null | sed 's/^heads\///' 2> /dev/null)"
