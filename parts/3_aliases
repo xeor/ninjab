@@ -61,7 +61,8 @@ if [ ! -z ${load_part_aliases_ls_shortcuts} ]; then
     alias ......='cd ../../../../..'
 fi
 
-alias ss='sudo bash -l'
+# alias ss='sudo bash -l'
+alias sa='sudo -E bash -l'
 alias psa='ps aux'
 alias cpr='cp -prv' # Keep rights, recursive, verbose
 [ ! -z ${load_part_aliases_same} ] && alias mkdir='mkdir -p'
